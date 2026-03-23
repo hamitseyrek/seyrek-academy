@@ -4,17 +4,6 @@ Bu doküman, elinizdeki veriye bakarak “ne ölçtük, hangi sütun neyi temsil
 
 ---
 
-## İçerik başlıkları
-
-- Veri, gözlem, değişken ve ölçüm kavramları
-- Nitel/nicel ve sürekli/kesikli ayrımları
-- Bağımlı ve bağımsız değişken: modelleme için başlangıç
-- Tek bir örnek veri seti üzerinden değişken rolleri
-- Veriyi ilk açma/inceleme: Excel ve Python
-- Veriden analiz sorusu üretme
-
----
-
 ## 1. Veri mi? Gözlem mi? Değişken mi?
 
 Veri kavramı tek başına “sayılardan oluşan bir dosya” gibi görünse de, aslında anlamı bağlama göre ortaya çıkar. Bu nedenle önce dört temel terimi oturtmak gerekir:

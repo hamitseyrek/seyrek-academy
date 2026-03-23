@@ -4,18 +4,6 @@ Bu makale; anakütle–örneklem ilişkisinden başlayarak parametre–istatisti
 
 ---
 
-## İçerik başlıkları
-
-- Anakütle ve örneklem: “neyi temsil ediyoruz?”
-- Parametre vs istatistik: “hangisi ölçülür, hangisi tahmin edilir?”
-- Örnekleme hatası ve belirsizlik: “kesin değer yerine güvenli çıkarım”
-- Örnekleme yöntemleri: rastgele, sistematik, tabakalı
-- Dağılım kavramı: olasılıkla sezgisel bağlantı
-- Veri toplama hataları: gürültü, etiketleme ve seçim yanlılığı
-- Kısa bir simülasyonla örneklem dağılımı fikri
-
----
-
 ## 1. Anakütle ve örneklem: aynı dosya, farklı sorular
 
 İstatistikte en sık yapılan karışıklıklardan biri şudur: “Elimizde şu tablo var; o zaman anakütle de bu tablodur.” Oysa anakütle, verinin kendisi değil; araştırma sorusunun hedeflediği tüm birimleri ifade eder.

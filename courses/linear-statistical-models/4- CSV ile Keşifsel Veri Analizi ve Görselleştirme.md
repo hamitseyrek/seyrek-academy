@@ -1,21 +1,6 @@
 # CSV ile Keşifsel Veri Analizi ve Görselleştirme
 
-Python temelleri, `pandas` ile veri tabanına dönüşünce bambaşka bir güce ulaşır: veri okuyabilir, temizleyebilir, özetleyebilir ve grafiklerden çıkarım yapabilirsiniz. Bu makale; fonksiyonlar, NumPy ve CSV/`pandas` akışı üzerinden keşifsel veri analizi (EDA) kurar; ardından histogram–boxplot–scatter–barplot gibi grafiklerin nasıl yorumlanacağını pratikleştirir.
-
----
-
-## İçerik başlıkları
-
-- Fonksiyonlar ve NumPy ile sayısal akış kurmak
-- `pandas` ile CSV okuma ve temel kontrol: `shape`, `head`, `info`, `isnull`
-- Eksik değer yönetimi (median doldurma)
-- Türetilmiş sütunlar: `np.where` ve `apply`
-- Sıralama, filtreleme ve `groupby` ile özet istatistik
-- Görselleştirme: histogram, boxplot, scatter, barplot
-- Grafik okuma rehberi ve sık hatalar
-- Mini uygulama: risk grubu üretmek
-- Sık karşılaşılan hatalar ve hızlı çözümler
-- Bir sonraki adıma geçiş (tahmin fikrine köprü)
+Python temelleri, `pandas` ile veri tabanına dönüşünce bambaşka bir güce ulaşır: veri okuyabilir, temizleyebilir ve özetleyebilirsiniz. Bu makale; fonksiyonlar, NumPy ve CSV/`pandas` akışı üzerinden keşifsel veri analizi (EDA) kurar. Grafik yorumlama ve `matplotlib`/`seaborn` uygulamaları ise bir sonraki dosyada bulunur.
 
 ---
 
@@ -69,10 +54,8 @@ Bu tür veriyle çalışırken tipik akış şudur:
 ```python
 import pandas as pd
 import numpy as np
-import matplotlib.pyplot as plt
-import seaborn as sns
 
-df = pd.read_csv("data/student_performance.csv")
+df = pd.read_csv("data/factory_quality_regression.csv")
 
 print(df.head())
 print(df.shape)       # (satır, sütun)
@@ -80,6 +63,12 @@ print(df.columns)
 df.info()
 df.describe()
 ```
+
+Bu örnekte:
+
+- `pandas` tabular veriyi `DataFrame` olarak tutar (burada `df` bu yapıdır).
+- `df.info()` veri tiplerini ve eksik değer durumunu hızlıca özetler.
+- `df.describe()` sayısal sütunlar için temel istatistikleri (ortalama, std, min, max ve çeyrekler) gösterir.
 
 Kontrol listesi:
 
@@ -98,6 +87,8 @@ Eksik değerler genellikle `NaN` olarak görünür:
 df.isnull().sum()
 ```
 
+`df.isnull()` her hücre için “eksik mi?” bilgisini üretir; `.sum()` ise her sütunda kaç eksik bulunduğunu sayar.
+
 Eksik satırları görmek:
 
 ```python
@@ -108,11 +99,11 @@ Bu makalede kullanılan basit yaklaşım: sayısal kolonlarda medyanla doldurma.
 
 ```python
 numeric_columns = [
-    "quiz_score",
-    "attendance_rate",
-    "sleep_hours",
-    "steps",
-    "project_score",
+    "sensor_alert_score",
+    "uptime_rate",
+    "maintenance_hours",
+    "cycle_count",
+    "quality_score",
 ]
 
 for col in numeric_columns:
@@ -120,6 +111,8 @@ for col in numeric_columns:
 
 df.isnull().sum()
 ```
+
+Bu kodda `fillna(...)`, ilgili kolondaki eksikleri aynı kolondaki `median()` değeriyle değiştirir.
 
 Neden medyan?
 
@@ -132,32 +125,36 @@ Neden medyan?
 
 Keşif analizinde bazen ham kolonlar tek başına yetmez; bazı durumları etiketlemek düşünmeyi hızlandırır.
 
-Örneğin proje notuna göre durum etiketi:
+Örneğin kalite skoruna göre durum etiketi:
 
 ```python
-df["success_status"] = np.where(
-    df["project_score"] >= 70,
-    "High",
-    "Needs Improvement",
+df["quality_status"] = np.where(
+    df["quality_score"] >= 70,
+    "Yüksek",
+    "Takip",
 )
 
-df[["student_id", "project_score", "success_status"]].head()
+df[["machine_id", "quality_score", "quality_status"]].head()
 ```
+
+`np.where(koşul, doğru_değer, yanlış_değer)` yapısı koşula göre yeni bir kolon üretir. Koşul sağlanıyorsa “Yüksek”, sağlanmıyorsa “Takip” yazılır.
 
 Çalışma seviyesini saatten türetmek için `if` mantığını fonksiyonla paketleyin:
 
 ```python
-def study_level(hours):
+def operation_level(hours):
     if hours < 5:
-        return "Low"
+        return "Düşük"
     elif hours < 10:
-        return "Medium"
+        return "Orta"
     else:
-        return "High"
+        return "Yüksek"
 
-df["study_level"] = df["weekly_study_hours"].apply(study_level)
-df[["weekly_study_hours", "study_level"]].head()
+df["operation_level"] = df["runtime_hours"].apply(operation_level)
+df[["runtime_hours", "operation_level"]].head()
 ```
+
+`apply`, kolondaki her değeri tek tek alır ve `operation_level` fonksiyonundan geçirir.
 
 ---
 
@@ -165,205 +162,123 @@ df[["weekly_study_hours", "study_level"]].head()
 
 Sıralama ve filtreleme, “hangi gruplar daha farklı?” sorusunu somutlaştırır.
 
-En yüksek proje puanları:
+En yüksek kalite skorları:
 
 ```python
-df.sort_values("project_score", ascending=False).head(10)
+df.sort_values("quality_score", ascending=False).head(10)
 ```
 
-Haftalık çalışma saati 10 ve üzeri olanlar:
+`sort_values`, ilgili kolonun değerlerini sıralar; `head(10)` ise en üstteki 10 satırı döndürür.
+
+Çalışma süresi 10 ve üzeri olanlar:
 
 ```python
-df[df["weekly_study_hours"] >= 10].head()
+df[df["runtime_hours"] >= 10].head()
 ```
 
-Hem yüksek proje hem yüksek devam oranı koşulu:
+Bu ifade, boolean koşula göre satırları filtreler.
+
+Yüksek kalite ve yüksek kullanılabilirlik koşulu:
 
 ```python
 df[
-    (df["project_score"] >= 75) & (df["attendance_rate"] >= 85)
+    (df["quality_score"] >= 75) & (df["uptime_rate"] >= 85)
 ].head()
 ```
 
-Şube bazında ortalamalar (`groupby`):
+Hat bazında ortalamalar (`groupby`):
 
 ```python
-df.groupby("section")[["quiz_score", "project_score", "attendance_rate"]].mean()
+df.groupby("line")[["sensor_alert_score", "quality_score", "uptime_rate"]].mean()
 ```
 
-Çalışma seviyesi bazında ortalama proje puanı:
+`groupby`, kolonun değerlerine göre gruplar; ardından `.mean()` seçilen sayısal kolonların her gruptaki ortalamasını hesaplar.
+
+Çalışma seviyesi bazında ortalama kalite skoru:
 
 ```python
-df.groupby("study_level")["project_score"].mean().sort_values(ascending=False)
+df.groupby("operation_level")["quality_score"].mean().sort_values(ascending=False)
 ```
 
-Durum dağılımı:
+Kalite durum dağılımı:
 
 ```python
-df["success_status"].value_counts()
+df["quality_status"].value_counts()
 ```
+
+`value_counts()`, kategorik etiketlerin frekanslarını (kaç kez geçtiğini) verir.
 
 ---
 
-## 6. Görselleştirme: grafik çizmek değil, okumak
+## 6. Mini uygulama: risk grubu üretmek ve özetini çıkarmak
 
-EDA’da grafiklerin amacı “güzel görünmek” değil; veriyi yorumlanabilir hale getirmektir. Aşağıdaki kontrol listeleri yorum için doğrudan kullanılabilir.
+Hedef: düşük kullanılabilirlik + düşük çalışma kombinasyonunu bir kalite risk etiketine dönüştürmek.
 
-### 6.1. Histogram: proje puanı dağılımı
-
-```python
-plt.figure(figsize=(8, 4))
-sns.histplot(df["project_score"], bins=10, kde=True)
-plt.title("Proje Notu Dağılımı")
-plt.xlabel("Proje Notu")
-plt.ylabel("Frekans")
-plt.show()
-```
-
-Yorum ipuçları:
-
-- Dağılım tek tepe mi, iki tepe mi?
-- Kuyruk (sağa/sola) uzuyor mu?
-- Hangi aralıkta yığılma var?
-
-### 6.2. Boxplot: şubelere göre karşılaştırma
-
-```python
-plt.figure(figsize=(8, 4))
-sns.boxplot(data=df, x="section", y="project_score")
-plt.title("Şube Bazında Proje Notu Dağılımı")
-plt.show()
-```
-
-Yorum ipuçları:
-
-- Medyan çizgisi hangi şubede daha yüksek?
-- Dağılım geniş mi (kutunun boyu)?
-- Aykırı değer var mı?
-
-### 6.3. Scatter: çalışma saati ve proje puanı ilişkisi
-
-```python
-plt.figure(figsize=(8, 5))
-sns.scatterplot(
-    data=df,
-    x="weekly_study_hours",
-    y="project_score",
-    hue="section",
-)
-plt.title("Çalışma Saati ve Proje Notu İlişkisi")
-plt.show()
-```
-
-Önemli not:
-
-- Scatter bir **ilişki sinyali** verir; doğrudan “neden-sonuç” kanıtı değildir.
-
-### 6.4. Barplot: çalışma seviyesine göre ortalama
-
-```python
-plt.figure(figsize=(8, 4))
-sns.barplot(
-    data=df,
-    x="study_level",
-    y="project_score",
-    estimator=np.mean,
-    errorbar=None,
-)
-plt.title("Çalışma Seviyesine Göre Ortalama Proje Notu")
-plt.show()
-```
-
-Sık yapılan hata:
-
-- Bar yüksekliğini “kesin fark var” gibi yorumlamak yerine, dağılım fikri için boxplot gibi tamamlayıcı grafiklerle birlikte düşünmek daha doğrudur.
-
----
-
-## 7. Mini uygulama: risk grubu üretmek
-
-Hedef: düşük devam oranı + düşük çalışma kombinasyonunu bir etikete dönüştürmek.
-
-```python
+```text
 df["risk_group"] = np.where(
-    (df["attendance_rate"] < 70) & (df["weekly_study_hours"] < 6),
-    "High Risk",
-    "Follow Up",
+    (df["uptime_rate"] < 70) & (df["runtime_hours"] < 6),
+    "Yüksek Kalite Riski",
+    "Takip",
 )
 
 df["risk_group"].value_counts()
 ```
 
-Risk grubuna göre ortalama proje puanı:
+```text
+df["risk_group"] = np.where(
+    (df["uptime_rate"] < 70) & (df["runtime_hours"] < 6),
+    "Yüksek Kalite Riski",
+    "Takip",
+)
 
-```python
-risk_ort = df.groupby("risk_group")["project_score"].mean().reset_index()
+df["risk_group"].value_counts()
+
+risk_ort = df.groupby("risk_group")["quality_score"].mean().reset_index()
 risk_ort
 ```
 
-Grafik:
+Burada risk etiketi, iki koşulun `&` ile birlikte sağlanmasına göre atanır.
+
+Risk grubuna göre ortalama kalite skoru:
 
 ```python
-plt.figure(figsize=(7, 4))
-sns.barplot(data=risk_ort, x="risk_group", y="project_score")
-plt.title("Risk Grubuna Göre Ortalama Proje Notu")
-plt.xlabel("Risk Grubu")
-plt.ylabel("Ortalama Proje Notu")
-plt.show()
+df["risk_group"] = np.where(
+    (df["uptime_rate"] < 70) & (df["runtime_hours"] < 6),
+    "Yüksek Kalite Riski",
+    "Takip",
+)
+
+risk_ort = df.groupby("risk_group")["quality_score"].mean().reset_index()
+risk_ort
 ```
-
----
-
-## 8. Sık karşılaşılan hatalar ve hızlı çözümler
-
-`pandas`/`matplotlib` tarafında sık görülen durumlar:
-
-### 8.1. `FileNotFoundError`
-
-Çözüm:
-
-- Dosya yolunu kontrol edin (`data/...` doğru mu?).
-- Notebook konumu ile göreli yol uyumlu mu?
-
-### 8.2. `NameError: name 'df' is not defined`
-
-Çözüm:
-
-- `df = pd.read_csv(...)` satırı çalıştırılmadan aşağıdaki işlemler yapılmış olabilir.
-- En üstten tekrar çalıştırmak problemi çözer.
-
-### 8.3. `KeyError: 'proje_notu'` benzeri sütun adı hataları
-
-Çözüm:
 
 ```python
-print(df.columns)
+df["risk_group"] = np.where(
+    (df["uptime_rate"] < 70) & (df["runtime_hours"] < 6),
+    "Yüksek Kalite Riski",
+    "Takip",
+)
+risk_ort = df.groupby("risk_group")["quality_score"].mean().reset_index()
+risk_ort
 ```
 
-ve doğru sütun adını kullanın (büyük/küçük harf farkı dahil).
+```text
+df["risk_group"] = np.where(
+    (df["uptime_rate"] < 70) & (df["runtime_hours"] < 6),
+    "Yüksek Kalite Riski",
+    "Takip",
+)
+risk_ort = df.groupby("risk_group")["quality_score"].mean().reset_index()
+risk_ort
+```
 
-### 8.4. Grafik görünmüyor
+```text
+df["risk_group"] = np.where((df["uptime_rate"] < 70) & (df["runtime_hours"] < 6), "Yüksek Kalite Riski", "Takip")
+risk_ort = df.groupby("risk_group")["quality_score"].mean().reset_index()
+risk_ort
+```
 
-Çözüm:
+`groupby("risk_group").mean()`, her risk grubunda `quality_score` ortalamasını hesaplar. `reset_index()`, sonucu tekrar tablo formatında görmeyi kolaylaştırır.
 
-- Hücre çalışmış mı?
-- `plt.show()` çağrısı var mı?
-
----
-
-## 9. İleriye geçiş: tahmin fikrine köprü
-
-Bu makalede yapılan şey temelde şudur:
-
-- Veri okunur
-- Temizlenir
-- Özetlenir
-- İlişkiler grafiklerle incelenir
-
-Bir sonraki adımda bu ilişkileri **tahmin kurallarına** çevirmek istenir. Bunun için çoğu zaman:
-
-- “Çıktı” tarafına gidecek değişken belirlenir
-- “Girdi” tarafına aday değişkenler seçilir
-
-Bu çerçeve, lineer modelleme mantığını kurmak için doğrudan temel sağlar.
+Bu özet tabloyu bir sonraki dosyada, grafikle birlikte yorumlayacağız.
 
