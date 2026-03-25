@@ -43,6 +43,21 @@ Bir sensörden alınan ham veri her zaman gerçek dünyadaki kesin değere eşit
 
 Robotik ve IoT projelerinde en sık karşılaşılan sensör tipleri şunlardır:
 
+```mermaid
+graph TD
+    subgraph Sensörler ve Ölçtükleri Büyüklükler
+        S1(🌡️ LM35 / DHT11) --> T[Sıcaklık / Nem]
+        S2(📏 HC-SR04) --> D[Mesafe]
+        S3(🏃 PIR Sensör) --> M[Hareket]
+        S4(💡 LDR) --> L[Işık Seviyesi]
+    end
+
+    style S1 fill:#f99, stroke:#333, stroke-width:2px
+    style S2 fill:#9cf, stroke:#333, stroke-width:2px
+    style S3 fill:#9f9, stroke:#333, stroke-width:2px
+    style S4 fill:#ff9, stroke:#333, stroke-width:2px
+```
+
 ### 2.1. Sıcaklık Sensörleri
 
 - **LM35**: Klasik analog sıcaklık sensörü. Her 1°C artış için çıkış voltajını 10 mV artırır. Çok basit bir ADC okuması ile sıcaklık hesaplanabilir.
@@ -78,6 +93,27 @@ Bir mikrodenetleyicinin (örneğin Arduino) bir pini genellikle en fazla **20-40
 
 Röle, düşük voltajlı/akımlı bir sinyalle (Örn: Arduino'nun 5V pini), çok yüksek voltaj ve akım çeken (Örn: 220V AC priz lambası veya büyük bir su pompası) cihazları kontrol etmeye yarayan elektromekanik veya katı hal (SSR) anahtardır.
 
+```mermaid
+graph TD
+    subgraph "Düşük Voltaj Devresi (Kontrol)"
+        direction LR
+        MCU[Mikrodenetleyici Pini (5V)] --> Bobin((Elektromıknatıs Bobini));
+    end
+
+    subgraph "Yüksek Voltaj Devresi (Yük)"
+        direction LR
+        Priz[AC Güç Kaynağı (220V)] -- Tel --> Anahtar;
+        Anahtar -- Tel --> Lamba((💡));
+        Lamba -- Tel --> Priz;
+    end
+
+    Bobin -.->|Manyetik Alan Oluşturur ve Anahtarı Çeker| Anahtar{Anahtar};
+
+    style MCU fill:#00979C,stroke:#333,stroke-width:2px,color:#fff
+    style Priz fill:#f96,stroke:#333,stroke-width:2px
+    style Lamba fill:#f9f,stroke:#333,stroke-width:2px
+```
+
 - **Mekanik tık sesi**: Elektromıknatısın kontakları çekmesiyle oluşur.
 - **Güvenlik**: Mikrodenetleyici ile yüksek gerilim devresini fiziksel olarak izole eder (galvanik izolasyon).
 
@@ -91,6 +127,41 @@ Röle, düşük voltajlı/akımlı bir sinyalle (Örn: Arduino'nun 5V pini), ço
 ## 5. Motor Türleri
 
 Robotik sistemlerde hareketi sağlamak için farklı motor türleri kullanılır. Her birinin kullanım amacı farklıdır.
+
+```mermaid
+graph TD
+    subgraph Motor Tipleri
+        direction LR
+        DC[DC Motor]
+        Servo[Servo Motor]
+        Step[Step Motor]
+    end
+
+    subgraph "Hareket Tipi"
+        direction LR
+        DC_Hareket(Sürekli Dönüş)
+        Servo_Hareket(Açısal Konumlanma <br> 0-180°)
+        Step_Hareket(Adım Adım Dönüş <br> ör. 1.8°/adım)
+    end
+
+    subgraph "Kontrol Sinyali"
+        direction LR
+        DC_Kontrol(PWM ile Hız <br> Yön için H-Köprüsü)
+        Servo_Kontrol(PWM Genişliği ile Açı)
+        Step_Kontrol(Pals Dizisi ile Adım)
+    end
+
+    subgraph "Kullanım Alanı"
+        direction LR
+        DC_Kullanim(Tekerlek, Fan)
+        Servo_Kullanim(Robot Kol, Dümen)
+        Step_Kullanim(3D Yazıcı, CNC)
+    end
+
+    DC --> DC_Hareket & DC_Kontrol & DC_Kullanim
+    Servo --> Servo_Hareket & Servo_Kontrol & Servo_Kullanim
+    Step --> Step_Hareket & Step_Kontrol & Step_Kullanim
+```
 
 ### 5.1. DC Motorlar
 
