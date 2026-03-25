@@ -20,6 +20,16 @@ average(scores)
 
 NumPy ile hızlı dizi tabanlı istatistik:
 
+NumPy (Numerical Python), Python’da sayısal hesaplamaları hızlandırmak için kullanılan temel kütüphanedir. Asıl farkı, temel veri yapısının `ndarray` (n-boyutlu dizi) olmasıdır; bu sayede veriyi tek tek gezmek yerine vektörel (dizi tabanlı) işlemlerle hesap yaparsınız.
+
+Neden kullanılır?
+- `ndarray` ile ortalama, standart sapma gibi istatistikler için hazır fonksiyonlara tek satırda ulaşırsınız.
+- Vektörize işlemler (loop yazmadan) performansı artırır.
+- `broadcasting` ile farklı boyutlardaki diziler arasında otomatik uyum sağlanır (ör. her elemana sabit ekleme).
+- `pandas` da sayısal verileri çoğunlukla bu mantıkla çalıştırdığı için EDA akışına doğal biçimde oturur.
+
+Not: Standart sapma gibi ölçüler istatistiksel bağlama göre değişir. `scores_array.std()` varsayılan olarak `ddof=0` (popülasyon standart sapması) hesaplar; örneklem standart sapması için genelde `ddof=1` kullanılır.
+
 ```python
 import numpy as np
 
