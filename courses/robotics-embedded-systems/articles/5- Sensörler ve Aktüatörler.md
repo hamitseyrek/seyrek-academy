@@ -46,10 +46,10 @@ Robotik ve IoT projelerinde en sık karşılaşılan sensör tipleri şunlardır
 ```mermaid
 graph TD
     subgraph Sensörler ve Ölçtükleri Büyüklükler
-        S1(🌡️ LM35 / DHT11) --> T[Sıcaklık / Nem]
-        S2(📏 HC-SR04) --> D[Mesafe]
-        S3(🏃 PIR Sensör) --> M[Hareket]
-        S4(💡 LDR) --> L[Işık Seviyesi]
+        S1[LM35 / DHT11] --> T[Sıcaklık / Nem]
+        S2[HC-SR04] --> D[Mesafe]
+        S3[PIR Sensör] --> M[Hareket]
+        S4[LDR] --> L[Işık Seviyesi]
     end
 
     style S1 fill:#f99, stroke:#333, stroke-width:2px
@@ -97,13 +97,13 @@ Röle, düşük voltajlı/akımlı bir sinyalle (Örn: Arduino'nun 5V pini), ço
 graph TD
     subgraph "Düşük Voltaj Devresi (Kontrol)"
         direction LR
-        MCU[Mikrodenetleyici Pini (5V)] --> Bobin((Elektromıknatıs Bobini));
+        MCU["Mikrodenetleyici Pini 5V"] --> Bobin["Elektromıknatıs Bobini"];
     end
 
     subgraph "Yüksek Voltaj Devresi (Yük)"
         direction LR
-        Priz[AC Güç Kaynağı (220V)] -- Tel --> Anahtar;
-        Anahtar -- Tel --> Lamba((💡));
+        Priz["AC Güç Kaynağı 220V"] -- Tel --> Anahtar;
+        Anahtar -- Tel --> Lamba["Lamba"];
         Lamba -- Tel --> Priz;
     end
 
