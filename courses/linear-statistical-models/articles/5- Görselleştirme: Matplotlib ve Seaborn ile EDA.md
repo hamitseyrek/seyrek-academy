@@ -130,15 +130,11 @@ Barplot, her kategori için bir özet istatistiği çizmenin hızlı yoludur. Bu
 - `errorbar=None`: hata çubuğunu kapat (özellikle yorum yükünü azaltmak için)
 
 ```python
-plt.figure(figsize=(8, 4))
-sns.barplot(
-    data=df,
-    x="operation_level",
-    y="quality_score",
-    estimator=np.mean,
-    errorbar=None,
-)
-plt.title("Çalışma Seviyesine Göre Ortalama Kalite Skoru")
+plt.figure(figsize=(12, 6))
+sns.barplot(data=df, x="line", y="quality_score")
+plt.title("Line'a Göre Kalite Skoru")
+plt.xlabel("Line")
+plt.ylabel("Kalite Skoru")
 plt.show()
 ```
 

@@ -2,24 +2,24 @@
 
 Veri depolamak tek başına yeterli değildir. Asıl değer, doğru soruları doğru şekilde sorabildiğin anda ortaya çıkar. SQL'in en temel parçası olan `SELECT`, tablolardaki veriyi çekmek, filtrelemek, sıralamak ve anlamlı hale getirmek için kullanılır.
 
-Bu yazida tum ornekler, `veritabanı/kaynaklar/university_sample.sql` dosyasindan import edilen ayni veri yapisi uzerinden ilerler.
+Bu yazıda tüm örnekler, `veritabanı/kaynaklar/university_sample.sql` dosyasindan import edilen aynı veri yapisi üzerinden ilerler.
 
 ---
 
-## MySQL Workbench ile ornek veritabani import etme
+## MySQL Workbench ile örnek veritabanı import etme
 
-1. MySQL Workbench'i ac ve bir baglantiya giris yap.
-2. Ust menuden `File > Open SQL Script...` sec.
-3. `veritabanı/kaynaklar/university_sample.sql` dosyasini ac.
-4. Script penceresinde tum sorgulari calistir (yildirim simgesi).
-5. Sol taraftaki `SCHEMAS` panelinde `university_sample` veritabanini gor.
-6. Yeni bir sorgu sekmesinde su komutu calistir:
+1. MySQL Workbench'i aç ve bir baglantiya giriş yap.
+2. Ust menuden `File > Open SQL Script...` seç.
+3. `veritabanı/kaynaklar/university_sample.sql` dosyasını aç.
+4. Script penceresinde tüm sorguları çalıştır (yildirim simgesi).
+5. Sol taraftaki `SCHEMAS` panelinde `university_sample` veritabanını gör.
+6. Yeni bir sorgu sekmesinde şu komutu çalıştır:
 
 ```sql
 USE university_sample;
 ```
 
-Kontrol icin:
+Kontrol için:
 
 ```sql
 SHOW TABLES;
@@ -35,47 +35,47 @@ Beklenen tablo listesi:
 
 ## SELECT'in en temel hali
 
-Tum satir ve tum sutunlari cekmek icin:
+Tüm satır ve tüm sütunları çekmek için:
 
 ```sql
 SELECT * FROM student;
 ```
 
-Buradaki `*`, "tum sutunlar" demektir. Ilk bakis ve hizli kontrol icin kullanislidir.
+Buradaki `*`, "tüm sutunlar" demektir. İlk bakis ve hizli kontrol için kullanislidir.
 
 ---
 
-## Gereken sutunlari secmek
+## Gereken sütunları seçmek
 
-Cogu durumda tum sutunlara ihtiyac yoktur:
+Cogu durumda tüm sutunlara ihtiyaç yoktur:
 
 ```sql
 SELECT student_no, first_name, last_name
 FROM student;
 ```
 
-Bu yaklasim:
-- gereksiz veri tasimazini azaltir,
-- ciktiyi okunabilir hale getirir.
+Bu yaklaşım:
+- gereksiz veri tasimazini azaltır,
+- çıktıyı okunabilir hale getirir.
 
 ---
 
-## DISTINCT ile tekrar eden degerleri tekillestirmek
+## DISTINCT ile tekrar eden değerleri tekillestirmek
 
-Hangi `department_id` degerlerinin oldugunu gormek icin:
+Hangi `department_id` degerlerinin olduğunu görmek için:
 
 ```sql
 SELECT DISTINCT department_id
 FROM student;
 ```
 
-`DISTINCT`, ayni degerleri tek satira indirir.
+`DISTINCT`, aynı değerleri tek satıra indirir.
 
 ---
 
 ## Alias (AS) ile daha anlasilir basliklar
 
-Teknik alan adlarini daha okunur hale getirmek icin:
+Teknik alan adlarını daha okunur hale getirmek için:
 
 ```sql
 SELECT student_no AS student_number,
@@ -96,7 +96,7 @@ FROM student
 WHERE department_id = 1;
 ```
 
-ID degeri belirli bir seviyenin uzerinde olanlar:
+ID değeri belirli bir seviyenin üzerinde olanlar:
 
 ```sql
 SELECT *
@@ -114,9 +114,9 @@ WHERE registration_year BETWEEN 2022 AND 2023;
 
 ---
 
-## AND ve OR ile coklu kosullar
+## AND ve OR ile çoklu kosullar
 
-Department'i 1 olan ve not ortalamasi 3.00'dan buyuk olanlar:
+Department'i 1 olan ve not ortalaması 3.00'dan büyük olanlar:
 
 ```sql
 SELECT *
@@ -138,7 +138,7 @@ WHERE department_id = 1
 
 ## LIKE ile metin deseni aramak
 
-Adi A ile baslayan ogrenciler:
+Adi A ile başlayan ogrenciler:
 
 ```sql
 SELECT *
@@ -146,7 +146,7 @@ FROM student
 WHERE first_name LIKE 'A%';
 ```
 
-Icerisinde `me` gecen adlar:
+Icerisinde `me` geçen adlar:
 
 ```sql
 SELECT *
@@ -156,9 +156,9 @@ WHERE first_name LIKE '%me%';
 
 ---
 
-## ORDER BY ile siralama
+## ORDER BY ile sıralama
 
-Isim ve soyisime gore alfabetik:
+Isim ve soyisime göre alfabetik:
 
 ```sql
 SELECT student_no, first_name, last_name
@@ -166,7 +166,7 @@ FROM student
 ORDER BY first_name ASC, last_name ASC;
 ```
 
-Not ortalamasina gore yuksekten dusuge:
+Not ortalamasına göre yüksekten düşüğe:
 
 ```sql
 SELECT student_no, first_name, gpa
@@ -176,9 +176,9 @@ ORDER BY gpa DESC;
 
 ---
 
-## LIMIT ile sonuc sayisini kisitlamak
+## LIMIT ile sonuç sayisini kisitlamak
 
-Ilk 3 kaydi gormek icin:
+İlk 3 kaydı görmek için:
 
 ```sql
 SELECT *
@@ -188,7 +188,7 @@ LIMIT 3;
 
 ---
 
-## Tum yapiyi bir araya getiren ornek
+## Tüm yapiyi bir araya getiren örnek
 
 ```sql
 SELECT student_no AS student_number,
@@ -204,26 +204,26 @@ LIMIT 5;
 
 Bu tek sorgu ile:
 - alan secersin,
-- basliklari duzenlersin,
+- başlıkları düzenlersin,
 - filtre uygularsin,
-- siralarsin,
+- sıralarsın,
 - sonucu sinirlarsin.
 
 ---
 
-## Kisa pratik listesi
+## Kısa pratik listesi
 
-Su istekleri ayni veritabani uzerinden SQL'e cevir:
+Şu istekleri aynı veritabanı üzerinden SQL'e cevir:
 
-1. `course` tablosundaki tum ders kodlari ve adlarini getir.
-2. `student` tablosunda 2023 kayitli olanlari listele.
-3. `department_id` degerlerini tekil olarak getir.
-4. `gpa` degeri 3.20 ve ustu olanlari yuksekten dusuge sirala.
-5. Adi `E` ile baslayan ogrencilerden ilk 2 kaydi getir.
+1. `course` tablosundaki tüm ders kodlari ve adlarını getir.
+2. `student` tablosunda 2023 kayitli olanları listele.
+3. `department_id` değerlerini tekil olarak getir.
+4. `gpa` değeri 3.20 ve üstü olanları yüksekten düşüğe sırala.
+5. Adi `E` ile başlayan ogrencilerden ilk 2 kaydı getir.
 
 ---
 
 ## Son soz
 
-`SELECT`, SQL'in yalnizca baslangic komutu degil; veriyle kurdugun iletisimin merkezidir.  
-`university_sample` uzerinde bu temel kaliplari oturttugunda, veriyi cekme, filtreleme ve siralama tarafinda guclu bir temel kurmus olursun.
+`SELECT`, SQL'in yalnızca baslangic komutu değil; veriyle kurdugun iletisimin merkezidir.  
+`university_sample` üzerinde bu temel kalıpları oturttuğunda, veriyi çekme, filtreleme ve sıralama tarafinda güçlü bir temel kurmus olursun.

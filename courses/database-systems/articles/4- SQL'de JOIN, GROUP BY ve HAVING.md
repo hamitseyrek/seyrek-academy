@@ -7,13 +7,13 @@ Odak noktasi:
 - veriyi ozetleme (`GROUP BY`)
 - gruplanmis sonucu filtreleme (`HAVING`)
 
-Tum ornekler `veritabanı/kaynaklar/retail_ops_sample.sql` verisi uzerindedir.
+Tüm örnekler `veritabanı/kaynaklar/retail_ops_sample.sql` verisi üzerindedir.
 
 ---
 
-## 1) Tablo alias'i (`so`, `c`, `p`) neden kullanilir?
+## 1) Tablo alias'i (`so`, `c`, `p`) neden kullanılır?
 
-Asagidaki ifade bir kisaltma degil, tablo takma adidir:
+Aşağıdaki ifade bir kısaltma değil, tablo takma adıdır:
 
 ```sql
 FROM sales_order so
@@ -25,22 +25,22 @@ Burada:
 - `so` = `sales_order`
 - `c` = `customer`
 
-### Alias kullanmanin faydasi
+### Alias kullanmanin faydası
 
 - Uzun adlari tekrar tekrar yazmazsin
 - JOIN'li sorgular daha okunur olur
-- Ayni isimli kolonlarda belirsizlik azalir (`status` gibi)
+- Aynı isimli kolonlarda belirsizlik azalir (`status` gibi)
 
-### Alias kullanma kurallari (onerilen standart)
+### Alias kullanma kuralları (onerilen standart)
 
-1. Her tabloda tutarli ol: `sales_order` her yerde `so` olsun.
-2. Anlamsiz tek harflerden kacin: `a`, `b`, `x` yerine `so`, `soi`, `pr`.
-3. Cok tablo varsa alias listeni sorgu ustunde yorumla notu olarak yazabilirsin.
-4. Takim standardi varsa ona uy.
+1. Her tabloda tutarlı ol: `sales_order` her yerde `so` olsun.
+2. Anlamsız tek harflerden kaçın: `a`, `b`, `x` yerine `so`, `soi`, `pr`.
+3. Çok tablo varsa alias listeni sorgu ustunde yorumla notu olarak yazabilirsin.
+4. Takım standardı varsa ona uy.
 
 ---
 
-## 3) JOIN'e gecis: tek tablodan coklu tabloya
+## 3) JOIN'e geçiş: tek tablodan çoklu tabloya
 
 ### 3.1 Tek tablo
 
@@ -50,10 +50,10 @@ FROM sales_order
 ORDER BY order_date DESC;
 ```
 
-Bu sorgu siparisleri getirir ama musteri adini vermez.
-`customer_id` sayisal bir anahtar oldugu icin tek basina is tarafinda yeterince okunur olmaz.
+Bu sorgu siparişleri getirir ama müşteri adini vermez.
+`customer_id` sayisal bir anahtar olduğu için tek başına iş tarafinda yeterince okunur olmaz.
 
-### 3.2 Ilk JOIN: siparis + musteri
+### 3.2 İlk JOIN: sipariş + müşteri
 
 ```sql
 SELECT so.order_no,
@@ -66,21 +66,21 @@ JOIN customer c ON c.id = so.customer_id
 ORDER BY so.order_date DESC;
 ```
 
-Bu sorgu ne yapiyor?
+Bu sorgu ne yapıyor?
 
 - `sales_order` tablosunu temel aliyor.
-- `customer` tablosuyla `customer_id` uzerinden eslestirme yapiyor.
-- Siparis numarasi, tarih, musteri adi, durum ve tutari tek satirda gosteriyor.
-- Sonuclari en yeni siparis ustte olacak sekilde siraliyor.
+- `customer` tablosuyla `customer_id` üzerinden eslestirme yapıyor.
+- Sipariş numarasi, tarih, müşteri adı, durum ve tutari tek satırda gösteriyor.
+- Sonuçları en yeni sipariş üstte olacak şekilde sıralıyor.
 
-Satir satir semantik:
+Satır satır semantik:
 
-- `SELECT ...`: ciktiya alinacak kolonlari tanimlar.
-- `FROM sales_order so`: ana veri kaynagi siparis tablosudur.
-- `JOIN customer c ON c.id = so.customer_id`: siparisi musteriyle iliski anahtari uzerinden eslestirir.
-- `ORDER BY so.order_date DESC`: ciktiyi tarihe gore en yeniden eskiye siralar.
+- `SELECT ...`: ciktiya alınacak kolonları tanımlar.
+- `FROM sales_order so`: ana veri kaynağı sipariş tablosudur.
+- `JOIN customer c ON c.id = so.customer_id`: siparişi müşteriyle ilişki anahtarı üzerinden eşleştirir.
+- `ORDER BY so.order_date DESC`: çıktıyı tarihe göre en yeniden eskiye sıralar.
 
-### 3.3 LEFT JOIN ile odeme durumunu ekleme
+### 3.3 LEFT JOIN ile ödeme durumunu ekleme
 
 ```sql
 SELECT so.order_no,
@@ -93,16 +93,16 @@ LEFT JOIN payment p ON p.order_id = so.id
 ORDER BY so.order_date DESC;
 ```
 
-`LEFT JOIN` secimi, odemesi henuz olusmayan siparisleri listede tutar.
-Bu nedenle `payment_status` bazen `NULL` gelebilir; bu bir hata degil, odeme kaydinin henuz olusmadigi anlamina gelir.
+`LEFT JOIN` seçimi, ödemesi henüz oluşmayan siparişleri listede tutar.
+Bu nedenle `payment_status` bazen `NULL` gelebilir; bu bir hata değil, ödeme kaydinin henüz olusmadigi anlamına gelir.
 
 ---
 
-## 4) JOIN turleri
+## 4) JOIN türleri
 
 ### INNER JOIN
 
-Iki tabloda da eslesen satirlari getirir.
+Iki tabloda da eslesen satırları getirir.
 
 ```sql
 SELECT so.order_no, c.full_name
@@ -110,11 +110,11 @@ FROM sales_order so
 INNER JOIN customer c ON c.id = so.customer_id;
 ```
 
-Burada yalnizca iki tabloda da eslesme olan satirlar doner.
+Burada yalnızca iki tabloda da eşleşme olan satırlar döner.
 
 ### LEFT JOIN
 
-Soldaki tum satirlari getirir, eslesmeyen sag kolonlar `NULL` olur.
+Soldaki tüm satırları getirir, eşleşmeyen sağ kolonlar `NULL` olur.
 
 ```sql
 SELECT so.order_no, p.status
@@ -122,18 +122,18 @@ FROM sales_order so
 LEFT JOIN payment p ON p.order_id = so.id;
 ```
 
-Bu sorgu, odemesi olmayan siparisleri de gormek istedigin durumlarda kullanilir.
+Bu sorgu, ödemesi olmayan siparişleri de görmek istediğin durumlarda kullanılır.
 
 ### RIGHT JOIN
 
-MySQL'de desteklenir, ama pratikte daha okunur oldugu icin
-tablolari yer degistirip `LEFT JOIN` kullanmak daha yaygindir.
+MySQL'de desteklenir, ama pratikte daha okunur olduğu için
+tabloları yer değiştirip `LEFT JOIN` kullanmak daha yaygındır.
 
 ---
 
-## 5) JOIN'de sik hatalar
+## 5) JOIN'de sık hatalar
 
-### 5.1 Yanlis ON kosulu
+### 5.1 Yanlış ON kosulu
 
 Hatali:
 
@@ -151,12 +151,12 @@ FROM sales_order so
 JOIN payment p ON p.order_id = so.id;
 ```
 
-Neden dogru?
+Neden doğru?
 
-- `payment.id` ile `sales_order.id` farkli varliklarin PK alanlaridir.
-- Iliski `payment.order_id -> sales_order.id` oldugu icin `ON` kosulu bu sekilde kurulmalidir.
+- `payment.id` ile `sales_order.id` farklı varliklarin PK alanlaridir.
+- İlişki `payment.order_id -> sales_order.id` olduğu için `ON` kosulu bu şekilde kurulmalidir.
 
-### 5.2 Belirsiz kolon kullanimi
+### 5.2 Belirsiz kolon kullanımı
 
 Hatali:
 
@@ -175,15 +175,15 @@ FROM sales_order so
 JOIN payment p ON p.order_id = so.id;
 ```
 
-Bu adlandirma, ayni isimli iki kolonu (`status`) karistirmadan okumayi saglar.
+Bu adlandırma, aynı isimli iki kolonu (`status`) karıştırmadan okumayi saglar.
 
 ---
 
-## 6) GROUP BY: satirdan ozet bilgiye gecis
+## 6) GROUP BY: satırdan özet bilgiye geçiş
 
-`GROUP BY`, satir satir veriyi ozet bilgiye cevirir.
+`GROUP BY`, satır satır veriyi özet bilgiye cevirir.
 
-### 6.1 Kategori bazli ciro
+### 6.1 Kategori bazlı ciro
 
 ```sql
 SELECT cat.name AS category_name,
@@ -196,30 +196,30 @@ GROUP BY cat.id, cat.name
 ORDER BY gross_revenue DESC;
 ```
 
-Bu sorgu ne yapiyor?
+Bu sorgu ne yapıyor?
 
-- Siparis kalemlerini urun ve kategoriyle bagliyor.
-- Her kategori icin toplam adet ve toplam ciro hesapliyor.
-- En yuksek ciroyu ustte gosterecek sekilde siraliyor.
+- Sipariş kalemlerini ürün ve kategoriyle bagliyor.
+- Her kategori için toplam adet ve toplam ciro hesapliyor.
+- En yüksek ciroyu üstte gösterecek şekilde sıralıyor.
 
-Satir satir semantik:
+Satır satır semantik:
 
 - `SELECT cat.name AS category_name`: kategori adini ciktiya "category_name" olarak verir.
-- `SUM(soi.quantity) AS total_units`: her grup icin toplam satilan adet hesaplar.
-- `ROUND(SUM(soi.line_total), 2) AS gross_revenue`: her grup icin toplam ciroyu iki ondalikla verir.
-- `FROM sales_order_item soi`: hesaplamanin taban satirlari siparis kalemleridir.
-- `JOIN product pr ...`: her kalemi ilgili urunle eslestirir.
-- `JOIN category cat ...`: urunden kategoriye gecis yapar.
-- `GROUP BY cat.id, cat.name`: toplamlarin kategori bazinda alinacagini tanimlar.
-- `ORDER BY gross_revenue DESC`: ciroya gore buyukten kucuge siralar.
+- `SUM(soi.quantity) AS total_units`: her grup için toplam satılan adet hesaplar.
+- `ROUND(SUM(soi.line_total), 2) AS gross_revenue`: her grup için toplam ciroyu iki ondalikla verir.
+- `FROM sales_order_item soi`: hesaplamanin taban satırları sipariş kalemleridir.
+- `JOIN product pr ...`: her kalemi ilgili ürünle eşleştirir.
+- `JOIN category cat ...`: üründen kategoriye geçiş yapar.
+- `GROUP BY cat.id, cat.name`: toplamlarin kategori bazinda alinacagini tanımlar.
+- `ORDER BY gross_revenue DESC`: ciroya göre büyükten küçüğe sıralar.
 
 Neden `GROUP BY` gerekli?
 
 - Sorguda hem aggregate (`SUM`) hem de aggregate olmayan kolon (`cat.name`) var.
-- Bu nedenle aggregate olmayan kolonlarin gruplama anahtarina alinmasi gerekir.
-- `GROUP BY` kaldirilirsa cogu SQL motorunda hata alirsin.
+- Bu nedenle aggregate olmayan kolonların gruplama anahtarına alınması gerekir.
+- `GROUP BY` kaldırılırsa çoğu SQL motorunda hata alirsin.
 
-### 6.2 Musteri bazli siparis ozeti
+### 6.2 Müşteri bazlı sipariş ozeti
 
 ```sql
 SELECT c.customer_code,
@@ -232,16 +232,16 @@ GROUP BY c.id, c.customer_code, c.full_name
 ORDER BY total_revenue DESC;
 ```
 
-Burada her satir bir musteriyi temsil eder; ayni musteriye ait tum siparisler tek satira ozetlenir.
+Burada her satır bir müşteriyi temsil eder; aynı müşteriye ait tüm siparişler tek satıra özetlenir.
 
 ---
 
 ## 7) HAVING: gruplanmis sonucu filtreleme
 
-`WHERE` satirlari gruplanmadan once filtreler.
+`WHERE` satırları gruplanmadan önce filtreler.
 `HAVING` gruplanmis sonuca kosul uygular.
 
-### 7.1 Cirosu 10000 ustu kategoriler
+### 7.1 Cirosu 10000 üstü kategoriler
 
 ```sql
 SELECT cat.name AS category_name,
@@ -254,9 +254,9 @@ HAVING SUM(soi.line_total) >= 10000
 ORDER BY gross_revenue DESC;
 ```
 
-`HAVING` filtresi, grup olustuktan sonra calistigi icin kategori bazli toplamlara kosul koyabiliriz.
+`HAVING` filtresi, grup oluştuktan sonra çalıştığı için kategori bazlı toplamlara kosul koyabiliriz.
 
-### 7.2 En az 2 siparisi olan musteriler
+### 7.2 En az 2 siparişi olan müşteriler
 
 ```sql
 SELECT c.full_name,
@@ -268,13 +268,13 @@ HAVING COUNT(so.id) >= 2
 ORDER BY order_count DESC;
 ```
 
-Bu sorgu, en az iki siparis veren musterileri bulmak icin ideal kaliptir.
+Bu sorgu, en az iki sipariş veren müşterileri bulmak için ideal kalıptır.
 
 ---
 
 ## 8) WHERE ve HAVING birlikte
 
-Gercek hayatta ikisi birlikte kullanilir:
+Gerçek hayatta ikisi birlikte kullanılır:
 
 ```sql
 SELECT c.city,
@@ -290,37 +290,37 @@ ORDER BY total_amount DESC;
 
 Mantik:
 
-- `WHERE`: iptal siparisleri cikar
-- `GROUP BY`: sehir bazli ozetle
-- `HAVING`: esigi asmayan gruplari ele
+- `WHERE`: iptal siparişleri çıkar
+- `GROUP BY`: şehir bazlı ozetle
+- `HAVING`: eşiği aşmayan gruplari ele
 
 ---
 
-## Sonuc
+## Sonuç
 
 `JOIN` veriyi birlestirir.
 `GROUP BY` veriyi ozetler.
-`HAVING` ozet sonuca karar kosulu uygular.
+`HAVING` özet sonuca karar kosulu uygular.
 
-Bu uc yapinin birlikte kullanimi,
-raporlama ve operasyon analizi icin SQL'in omurgasini olusturur.
+Bu üç yapının birlikte kullanımı,
+raporlama ve operasyon analizi için SQL'in omurgasini oluşturur.
 
 ---
 
 ## 10) JOIN karar agaci: hangi durumda hangi JOIN?
 
-Sorguyu yazmadan once su soruyu sor:
+Sorguyu yazmadan önce şu soruyu sor:
 "Soldaki kayitlarin hepsini korumam gerekiyor mu?"
 
 - Evet -> `LEFT JOIN`
-- Hayir, yalnizca eslesenler -> `INNER JOIN`
+- Hayir, yalnızca eslesenler -> `INNER JOIN`
 
-Ikinci soru:
-"Eslesmeyen kayitlari tespit etmek istiyor muyum?"
+İkinci soru:
+"Eslesmeyen kayıtları tespit etmek istiyor muyum?"
 
 - Evet -> `LEFT JOIN ... WHERE sag_tablo.id IS NULL`
 
-Ornek: odeme kaydi olmayan siparisler:
+Örnek: ödeme kaydı olmayan siparişler:
 
 ```sql
 SELECT so.order_no,
@@ -334,10 +334,10 @@ ORDER BY so.order_date DESC;
 
 ---
 
-## 11) Ayni sorunun 3 farkli JOIN cozum stili
+## 11) Aynı sorunun 3 farklı JOIN çözüm stili
 
 Soru:
-"Her siparis icin musteri, odeme ve kargo durumunu getir."
+"Her sipariş için müşteri, ödeme ve kargo durumunu getir."
 
 ### Stil 1: Duz alias ve tek blok
 
@@ -356,11 +356,11 @@ LEFT JOIN shipment sh ON sh.order_id = so.id;
 
 ```sql
 SELECT
-  -- siparis
+  -- sipariş
   so.order_no,
   so.order_date,
   so.status AS order_status,
-  -- musteri
+  -- müşteri
   c.customer_code,
   c.full_name,
   c.city,
@@ -376,7 +376,7 @@ LEFT JOIN payment p ON p.order_id = so.id
 LEFT JOIN shipment sh ON sh.order_id = so.id;
 ```
 
-### Stil 3: Once CTE sonra final secim
+### Stil 3: Önce CTE sonra final secim
 
 ```sql
 WITH order_base AS (
@@ -402,31 +402,31 @@ LEFT JOIN shipment sh ON sh.order_id = ob.id;
 CTE nedir?
 
 - CTE, `WITH` ile tanimlanan gecici isimli sorgu sonucudur.
-- Ana sorguyu parcalara ayirarak okunabilirligi artirir.
+- Ana sorguyu parçalara ayırarak okunabilirliği artırır.
 - Ozellikle uzun JOIN zincirlerinde ilk adimi sade bir "base set" haline getirir.
 
-Bu ornekte CTE ne yapiyor?
+Bu örnekte CTE ne yapıyor?
 
-- `order_base` adli ilk adimda siparis + musteri bilgisi tek bir ara sonuc olarak uretiliyor.
-- Alttaki final sorgu bu ara sonucu kullanip odeme ve kargo kolonlarini ekliyor.
-- Boylece tek sorguda her seyi ust uste yazmak yerine, mantik iki asamada okunuyor.
+- `order_base` adli ilk adımda sipariş + müşteri bilgisi tek bir ara sonuç olarak uretiliyor.
+- Alttaki final sorgu bu ara sonucu kullanip ödeme ve kargo kolonlarını ekliyor.
+- Boylece tek sorguda her seyi üst uste yazmak yerine, mantik iki asamada okunuyor.
 
 Üç stil de doğru olabilir.
-Takim okunabilirligi hangi stilde daha yuksekse onu sec.
+Takım okunabilirliği hangi stilde daha yüksekse onu seç.
 
 ---
 
 ## 12) GROUP BY'da "granularity" kavrami
 
-Granularity = raporun satir seviyesi.
+Granularity = raporun satır seviyesi.
 
-Ornek:
+Örnek:
 
-- `GROUP BY city` -> sehir seviyesi
-- `GROUP BY city, segment` -> sehir + segment seviyesi
+- `GROUP BY city` -> şehir seviyesi
+- `GROUP BY city, segment` -> şehir + segment seviyesi
 - `GROUP BY city, segment, status` -> daha detayli seviye
 
-Ayni veri, farkli granularity ile farkli karar bilgisi uretir.
+Aynı veri, farklı granularity ile farklı karar bilgisi uretir.
 
 ### Sehir seviyesi
 
@@ -453,12 +453,12 @@ GROUP BY c.city, c.segment;
 
 ---
 
-## 13) HAVING ile is kurali filtreleri
+## 13) HAVING ile iş kuralı filtreleri
 
-`HAVING` sadece "buyuk-kucuk" icin degil,
-is kurali tabanli raporlarda da kullanilir.
+`HAVING` sadece "büyük-küçük" için değil,
+iş kuralı tabanli raporlarda da kullanılır.
 
-### En az 2 farkli urun alan musteriler
+### En az 2 farklı ürün alan müşteriler
 
 ```sql
 SELECT c.customer_code,
@@ -472,7 +472,7 @@ HAVING COUNT(DISTINCT soi.product_id) >= 2
 ORDER BY distinct_product_count DESC;
 ```
 
-### Ortalama sepeti 10000 ustu sehirler
+### Ortalama sepeti 10000 üstü sehirler
 
 ```sql
 SELECT c.city,
@@ -488,16 +488,16 @@ ORDER BY avg_basket DESC;
 
 ## 14) JOIN + GROUP BY kombinasyonunda doğruluk kontrolü
 
-Cok tablolu sorgularda en sik problem:
-satir carpimi nedeniyle toplamlarin sismesi.
+Çok tablolu sorgularda en sık problem:
+satır carpimi nedeniyle toplamlarin sismesi.
 
 Kontrol adimi:
 
-1. Once ham satir sayisi
+1. Önce ham satır sayısı
 2. Sonra grup sonucu
 3. Sonra birim test sorgusu
 
-### Ham satir
+### Ham satır
 
 ```sql
 SELECT COUNT(*) AS row_count
@@ -515,7 +515,7 @@ JOIN sales_order_item soi ON soi.order_id = so.id
 GROUP BY so.id, so.order_no;
 ```
 
-### Rastgele bir siparisi manuel kontrol
+### Rastgele bir siparişi manuel kontrol
 
 ```sql
 SELECT so.order_no,
@@ -529,9 +529,9 @@ WHERE so.order_no = 'SO-2025-0001';
 
 ---
 
-## 15) Alias sozlugu (makale serisi standardi)
+## 15) Alias sozlugu (makale serisi standardı)
 
-Bu seride su alias'lari sabit tut:
+Bu seride şu alias'lari sabit tut:
 
 - `c` -> `customer`
 - `sp` -> `supplier`
@@ -544,35 +544,35 @@ Bu seride su alias'lari sabit tut:
 - `p` -> `payment`
 - `sh` -> `shipment`
 
-Bu standardi korumak, okuma suresini ciddi azaltir.
+Bu standardı korumak, okuma suresini ciddi azaltır.
 
 ---
 
-## 16) Pratik: 10 ek JOIN/HAVING gorevi
+## 16) Pratik: 10 ek JOIN/HAVING görevi
 
-1. Sehir bazinda `delivered` siparis sayisini getir.
-2. Odeme metodu `card` olan siparislerin toplam tutarini hesapla.
-3. Kargosu `in_transit` olan siparisleri musteri adiyla listele.
-4. Her kategoride en cok satilan urunun SKU bilgisini getir.
+1. Sehir bazinda `delivered` sipariş sayisini getir.
+2. Odeme metodu `card` olan siparişlerin toplam tutarini hesapla.
+3. Kargosu `in_transit` olan siparişleri müşteri adiyla listele.
+4. Her kategoride en çok satılan ürünün SKU bilgisini getir.
 5. Her depoda kritik stok adedini say.
-6. Segmente gore ortalama siparis tutarini hesapla.
-7. En az 2 sehirde satis yapan musterileri bul.
-8. Kargo ucreti ortalamanin ustunde olan siparisleri getir.
-9. Iptal siparislerin sehir dagilimini cikar.
-10. Toplam cirosu 30000 ustu musterileri listele.
+6. Segmente göre ortalama sipariş tutarini hesapla.
+7. En az 2 şehirde satış yapan müşterileri bul.
+8. Kargo ucreti ortalamanin ustunde olan siparişleri getir.
+9. Iptal siparişlerin şehir dağılımını çıkar.
+10. Toplam cirosu 30000 üstü müşterileri listele.
 
 ---
 
 ## 17) Sorgu yazim kalibi (tekrar kullan)
 
-JOIN + GROUP BY sorgusu yazarken su kalip:
+JOIN + GROUP BY sorgusu yazarken şu kalip:
 
 1. `FROM` tablosunu belirle
-2. `JOIN` iliskilerini birer birer ekle
-3. `WHERE` satir filtresini yaz
-4. `GROUP BY` granularity sec
+2. `JOIN` ilişkilerini birer birer ekle
+3. `WHERE` satır filtresini yaz
+4. `GROUP BY` granularity seç
 5. `HAVING` grup filtresi ekle
-6. `ORDER BY` rapor okunurlugu ayarla
+6. `ORDER BY` rapor okunurluğu ayarla
 
 Sablon:
 
@@ -591,8 +591,8 @@ ORDER BY ...;
 
 ## 18) Kapanış: neden bu kadar detay?
 
-`JOIN` bilmek tek basina yetmez.
-Asil farki su kombinasyon yaratir:
+`JOIN` bilmek tek başına yetmez.
+Asıl farkı şu kombinasyon yaratir:
 
 - doğru JOIN
 - doğru granularity
@@ -600,5 +600,5 @@ Asil farki su kombinasyon yaratir:
 - doğru doğrulama adımı
 
 Bu disiplini kurdugunda,
-raporlar sadece calisan degil,
+raporlar sadece çalışan değil,
 guvenilir hale gelir.
