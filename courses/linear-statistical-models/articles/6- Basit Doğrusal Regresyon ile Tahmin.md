@@ -171,3 +171,17 @@ Bu grafikler nasıl yorumlanır:
 - Residual noktaları `0` çizgisi çevresinde rastgele dağılıyorsa doğrusal model varsayımı daha makul kabul edilir.
 - Belirgin eğri/desen varsa model ilişkiyi tam yakalayamıyor olabilir.
 - Residual dağılımı aşırı çarpık veya çok genişse hata yapısı yeniden incelenmelidir.
+
+## Bu veri seti için grafiklerin yorumu
+
+Bu makaledeki örnek çalışmada elde edilen residual grafiklerine göre öne çıkan bulgular şunlardır:
+
+- `Residuals vs Predicted` grafiğinde noktalar genel olarak `0` çizgisi etrafına dağılmaktadır. Bu görünüm, tek değişkenli doğrusal modelin temel eğilimi yakaladığını gösterir.
+- Belirgin, keskin bir U-eğrisi veya sistematik dalga deseni görünmediği için güçlü bir doğrusal olmayan yapı sinyali gözlenmemektedir.
+- Tahmin değeri yükseldikçe residual yayılımında kısmi artış işareti vardır. Bu durum, üst aralıklarda hata varyansının bir miktar büyüyebileceğini düşündürür.
+- `Residual Distribution` grafiği yaklaşık çan eğrisi formundadır; ancak sağ kuyruk tarafında sınırlı bir uzama bulunur. Bu görünüm, hataların tamamen simetrik olmadığını fakat aşırı bir bozulma da içermediğini gösterir.
+
+Uygulama açısından değerlendirme:
+- Bu veri setinde basit doğrusal regresyon başlangıç seviyesi bir model olarak kullanılabilir.
+- Daha güvenilir sonuç için aynı analizi eğitim/test ayrımı ile tekrarlamak ve metrikleri test setinde raporlamak gerekir.
+- Üst tahmin aralığında hata artışı devam ederse çoklu regresyon, dönüşüm (ör. log) veya robust regresyon alternatifleri değerlendirilebilir.
