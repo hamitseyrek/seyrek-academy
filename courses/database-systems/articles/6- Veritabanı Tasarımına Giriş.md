@@ -83,7 +83,7 @@ Bu diyagramın anlamı:
 - Bir ürün birden fazla siparişte geçebilir (`1-N`, kalem tablosu üzerinden).
 
 Buradan dolaylı olarak `N-N` ilişkiyi de görürüz:  
-`ORDERS` ile `PRODUCT` arasındaki çoktan çoğa ilişki, `ORDER_ITEM` ara tablosu ile çözülür.
+`ORDERS` ile `PRODUCT` arasındaki çoktan çoğa ilişki, `ORDER_ITEM` ara tablosu ile çözülür
 
 ## Kötü şema vs iyi şema
 
