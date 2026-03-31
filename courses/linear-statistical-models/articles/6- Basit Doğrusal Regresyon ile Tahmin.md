@@ -39,7 +39,7 @@ Her gözlem noktası model doğrusunun üzerinde veya altında kalır. Bu farkla
 
 Pratik karşılığı:
 - Tüm noktalar doğrunun üstünde olmaz; belirli bir sapma her zaman vardır.
-- Model, bu sapmaları mümkün olduğunca küçük tutan "en uygun" doğruyu bulur.
+- Model, bu sapmaları mümkün olduğunca küçük tutan en uygun doğruyu bulur.
 
 ## Örnek akış: `factory_quality_regression.csv`
 
@@ -89,6 +89,9 @@ model.fit(X, y)
 # Eğitim verisi üzerinde tahmin üret
 y_pred = model.predict(X)
 
+# Artıklar (residual): gerçek - tahmin
+residuals = y - y_pred
+
 # Katsayılar ve temel metrikler
 print("b1 (eğim):", float(model.coef_[0]))
 print("b0 (sabit):", float(model.intercept_))
@@ -96,9 +99,10 @@ print("R2:", float(r2_score(y, y_pred)))
 print("RMSE:", float(mean_squared_error(y, y_pred, squared=False)))
 ```
 
-Bu metriklerin anlamı:
-- `R2`, `quality_score` değişiminin ne kadarının model tarafından açıklandığını gösterir.
-- `RMSE`, tahminlerin gerçek değerden ortalama olarak kaç puan saptığını gösterir.
+## Metriklerin anlamı: R2 ve RMSE
+
+- `R2` (R-squared, belirlilik katsayısı): `quality_score` değişiminin ne kadarının model tarafından açıklandığını gösterir.
+- `RMSE` (Root Mean Squared Error, Kök Ortalama Kare Hata): Tahminlerin gerçek değerden ortalama olarak kaç puan saptığını gösterir.
 
 Örnek yorum:
 - `R2 = 0.70` ise, değişimin yaklaşık `%70`'i modelle açıklanıyor demektir.
@@ -108,7 +112,7 @@ Kısa değerlendirme çerçevesi:
 - `R2` değeri `1`'e yaklaştıkça modelin açıklama gücü artar.
 - `RMSE` değeri `0`'a yaklaştıkça tahmin hatası azalır.
 
-Önemli not: Bu metrikler eğitim verisi üzerinde hesaplandığı için iyimser olabilir. Model performansını gerçekçi değerlendirmek için eğitim/test ayrımı yapılmalıdır.
+Önemli not: Bu metrikler eğitim verisi üzerinde hesaplandığı için iyimser olabilir. Model performansını daha gerçekçi değerlendirmek için eğitim/test ayrımı yapılmalıdır.
 
 ## Doğrunun görselleştirilmesi
 
@@ -126,7 +130,7 @@ y_grid = model.predict(x_grid)
 plt.figure(figsize=(7, 5))
 sns.scatterplot(data=df, x="runtime_hours", y="quality_score", alpha=0.7)
 plt.plot(x_grid, y_grid, color="red", linewidth=2)
-plt.title("Doğrusal Regresyon Doğrusu")
+plt.title("Basit Doğrusal Regresyon Doğrusu")
 plt.xlabel("runtime_hours")
 plt.ylabel("quality_score")
 plt.show()
@@ -136,115 +140,34 @@ Grafiğin değerlendirilmesi:
 - Noktalar doğru etrafında geniş bir alana yayılıyorsa hata düzeyi görece yüksektir.
 - Noktalar doğruya yakın kümeleniyorsa modelin tek değişkenle yakaladığı ilişki daha güçlüdür.
 - Regresyon doğrusu, gözlenen dağılımın ortalama eğilimini temsil eder; tüm gözlemleri birebir açıklaması beklenmez.
-# Basit Doğrusal Regresyon ile Tahmin
 
-Keşifsel analizde iki değişken arasında bir ilişki sinyali görmek sık olur. Basit doğrusal regresyon, bu sinyali tek bir tahmin kuralına dönüştürmeyi hedefler: tek bir girdiyle (bağımsız değişken) bir çıktıyı (bağımlı değişken) öngörmek.
+## Model sapmalarının görselleştirilmesi (Residual Analysis)
 
-Bu makalede hedef değişken `quality_score` (kalite skoru) ve girdi değişkeni `runtime_hours` (makine çalışma süresi).
-
----
-
-## Model fikri
-
-Doğrusal model şu formülle yazılır:
-
-\( y = \beta_0 + \beta_1 x + \varepsilon \)
-
-- \(x\): `runtime_hours`
-- \(y\): `quality_score`
-- \(\beta_0\): sabit terim (doğrunun y-kesişimi)
-- \(\beta_1\): eğim (x 1 birim artınca y’nin ortalama değişimi)
-- \(\varepsilon\): rastgele hata/oynaklık
-
-Bu model, veriyi “tek bir doğru” ile özetlemeye çalışır.
-
----
-
-## En küçük kareler: çizgi nasıl seçilir?
-
-Her veri noktasının doğrunun üzerinde/altında bir sapması vardır. Basit regresyon, bu sapmaların karelerinin toplamını en aza indirecek \( \beta_0 \) ve \( \beta_1 \) değerlerini arar.
-
-Pratikte bunun anlamı şudur:
-
-- Noktalar tek bir doğruya tam oturmaz
-- Model, “en iyi” ortalama davranışı temsil eden doğrunun katsayılarını bulur
-
----
-
-## Örnek akış: `factory_quality_regression.csv`
-
-Önce veriyi yükleyelim:
-
-```python
-import pandas as pd
-import numpy as np
-
-df = pd.read_csv("data/factory_quality_regression.csv")
-```
-
-Eksik değerler varsa, sayısal kolonlarda medyanla doldurmak pratik bir başlangıçtır:
-
-```python
-numeric_columns = [
-    "sensor_alert_score",
-    "uptime_rate",
-    "maintenance_hours",
-    "cycle_count",
-    "quality_score",
-    "runtime_hours",
-]
-
-for col in numeric_columns:
-    df[col] = df[col].fillna(df[col].median())
-```
-
-Tek değişken için model kurma:
-
-```python
-from sklearn.linear_model import LinearRegression
-from sklearn.metrics import r2_score, mean_squared_error
-
-X = df[["runtime_hours"]]   # 2D format şart
-y = df["quality_score"]
-
-model = LinearRegression()
-model.fit(X, y)
-
-y_pred = model.predict(X)
-
-print("beta1 (eğim):", float(model.coef_[0]))
-print("beta0 (sabit):", float(model.intercept_))
-print("R2:", float(r2_score(y, y_pred)))
-print("RMSE:", float(mean_squared_error(y, y_pred, squared=False)))
-```
-
-R2 ve RMSE’yi birlikte düşünmek daha anlamlıdır:
-- R2: “varyansın ne kadarını açıklıyor?”
-- RMSE: “tahminlerin tipik hatası kaç puan?”
-
----
-
-## Doğruyu görselleştirme
+Modelin nerede hata yaptığını görmek için residual grafikleri kullanılır. Amaç, hataların rastgele mi dağıldığını yoksa belirli bir desen mi oluşturduğunu incelemektir.
 
 ```python
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-x_min = df["runtime_hours"].min()
-x_max = df["runtime_hours"].max()
-x_grid = np.linspace(x_min, x_max, 100).reshape(-1, 1)
-y_grid = model.predict(x_grid)
+# 1) Residual vs Tahmin grafiği
+plt.figure(figsize=(7, 4))
+sns.scatterplot(x=y_pred, y=residuals, alpha=0.7)
+plt.axhline(0, color="red", linestyle="--", linewidth=1.5)
+plt.title("Residuals vs Predicted")
+plt.xlabel("Predicted quality_score")
+plt.ylabel("Residual (y - y_pred)")
+plt.show()
 
-plt.figure(figsize=(7, 5))
-sns.scatterplot(data=df, x="runtime_hours", y="quality_score", alpha=0.7)
-plt.plot(x_grid, y_grid, color="red", linewidth=2)
-plt.title("Doğrusal Regresyon Doğrusu")
-plt.xlabel("runtime_hours")
-plt.ylabel("quality_score")
+# 2) Residual dağılımı
+plt.figure(figsize=(7, 4))
+sns.histplot(residuals, kde=True, bins=20)
+plt.title("Residual Distribution")
+plt.xlabel("Residual")
+plt.ylabel("Count")
 plt.show()
 ```
 
-Yorum:
-- Noktalar genişse hata/oynaklık yüksektir
-- Doğru, gözlenen dağılımı “tek çizgi”ye indirger
-
+Bu grafikler nasıl yorumlanır:
+- Residual noktaları `0` çizgisi çevresinde rastgele dağılıyorsa doğrusal model varsayımı daha makul kabul edilir.
+- Belirgin eğri/desen varsa model ilişkiyi tam yakalayamıyor olabilir.
+- Residual dağılımı aşırı çarpık veya çok genişse hata yapısı yeniden incelenmelidir.
