@@ -3,7 +3,7 @@
 İlişkisel veritabanlarında en kritik hedeflerden biri, veriyi tekrar etmeden ve tutarlılığı bozmadan saklamaktır.
 Normalizasyon, bu hedefe ulaşmak için kullanılan sistematik tasarım yaklaşımıdır.
 
-Konuya yeni başlıyorsan normalizasyonu şöyle düşünebilirsin:
+Konuya yeni başlayan biri için normalizasyon şöyle düşünülebilir:
 Dağınık bir dolabı düzenlemek gibi. Aynı eşya birden fazla yere konursa bulmak zorlaşır, birini düzeltince diğerini unutursun.
 Veritabanı da benzer şekilde, düzenli olmadığında zamanla hata üretmeye başlar.
 
@@ -185,7 +185,7 @@ Bu durumda:
 - `product_name`, `unit_price` yalnızca `product_id`'ye bağlıdır
 
 Yani kısmi bağımlılık vardır.
-Bu durumu yeni başlayan biri için şu şekilde okuyabilirsin:
+Bu durum yeni başlayan biri için şu şekilde okunabilir:
 "Müşteri bilgisi ürüne bağlı değil; ürün bilgisi de siparişe bağlı değil."
 Bu nedenle hepsini tek tabloda tutmak doğal değildir.
 

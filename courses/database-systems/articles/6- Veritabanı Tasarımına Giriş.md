@@ -1,6 +1,7 @@
 # Veritabanı Tasarımına Giriş
 
-Veritabanı tasarımı, doğru veri modeli kurmanın temelidir.
+Veritabanı tasarımı; hangi verinin, hangi tabloda, hangi ilişki ve kurallarla saklanacağını planlama sürecidir.
+Başka bir deyişle, koddan önce veri yapısının mimarisini kurmaktır.
 Sağlam bir tablo yapısı; verinin tutarlılığını, sorguların okunabilirliğini ve sistemin sürdürülebilirliğini doğrudan etkiler.
 
 İyi tasarlanmış bir veritabanı:
@@ -9,49 +10,41 @@ Sağlam bir tablo yapısı; verinin tutarlılığını, sorguların okunabilirli
 - veri hatalarını azaltır
 - büyüdüğünde sistemi daha az yorar
 
-Bu yazıda veritabanı tasarımının temel prensiplerini, gerçek bir senaryo üzerinden adım adım kuracağız.
-
-## Veritabanı tasarımı nedir?
-
-Veritabanı tasarımı, şu sorulara net cevap verme işidir:
-
-- Hangi bilgileri tutacağım?
-- Bu bilgiler hangi tablolarda duracak?
-- Tablolar birbirine hangi anahtarlarla bağlanacak?
-
 Buradaki hedef sadece "çalışan bir sistem" değil, uzun vadede bozulmayan bir şema kurmaktır.
 
-## İlk adım: varlıkları ayırmak
+## 1. Varlıklar
 
 İlk kez tasarlarken yapılan en yaygın hata, her şeyi tek tabloya koymaktır.
 Bunun yerine önce varlıkları ayırmak gerekir.
 
-E-ticaret mini senaryosunda temel varlıklar:
+Örneğin bir E-ticaret mini senaryosunda temel varlıklar şu şekildedir:
 
 - Müşteri
 - Ürün
 - Sipariş
 - Sipariş Kalemi
 
-Aşağıdaki akışta bu düşünceyi görebilirsin:
+Aşağıdaki akışta bu yapı görülebilir:
 
 ```mermaid
 flowchart LR
-    A[İş İhtiyacı] --> B[Varlıkları Çıkar]
+    A[İhtiyaç Analizi] --> B[Varlıklar]
     B --> C[Müşteri]
     B --> D[Ürün]
     B --> E[Sipariş]
     E --> F[Sipariş Kalemi]
 ```
 
+
+
 Bu adımdan sonra "hangi bilgi nereye ait?" sorusu daha kolay cevaplanır.
 
-## PK ve FK mantığı (en kritik iki kavram)
+## 2. PK ve FK
 
 ### Primary Key (PK)
 
 PK, bir tablodaki her satırı tekil olarak tanımlayan alandır.
-Kimlik numarası gibi düşünebilirsin: aynısından iki tane olmaz.
+Kimlik numarası gibi düşünülebilir: aynısından iki tane olmaz.
 
 Örnek:
 
@@ -81,30 +74,16 @@ erDiagram
     PRODUCT ||--o{ ORDER_ITEM : satilir
 ```
 
+
+
 Bu diyagramın anlamı:
 
 - Bir müşteri birden fazla sipariş verebilir (`1-N`).
 - Bir sipariş birden fazla kalem içerir (`1-N`).
 - Bir ürün birden fazla siparişte geçebilir (`1-N`, kalem tablosu üzerinden).
 
-Buradan dolaylı olarak `N-N` ilişkiyi de görürüz:
+Buradan dolaylı olarak `N-N` ilişkiyi de görürüz:  
 `ORDERS` ile `PRODUCT` arasındaki çoktan çoğa ilişki, `ORDER_ITEM` ara tablosu ile çözülür.
-
-## Neden ara tablo kullanırız?
-
-"Siparişte birden fazla ürün var" durumu ilk bakışta tek kolonda liste gibi tutulmak istenebilir.
-Ama bu hatalı yaklaşımdır.
-
-Doğru model:
-
-- `ORDERS` tablosu siparişin üst bilgisini tutar
-- `ORDER_ITEM` tablosu ürün bazlı satırları tutar
-
-Bu sayede:
-
-- aynı siparişe birden fazla ürün eklenir
-- her ürün için adet/fiyat ayrıca tutulur
-- toplamlar doğru hesaplanır
 
 ## Kötü şema vs iyi şema
 
@@ -135,10 +114,9 @@ quantities: 1,2
 Bu yapıda ürün, fiyat ve adet aynı sırada gitmek zorundadır. Sadece `products` alanındaki sıra değişirse eşleşme bozulur ve veri yanlış okunur.
 
 - Tek bir ürünün bilgisini güncellemek zordur.  
-  Örneğin sadece `Latte` fiyatını değiştirmek istediğinde tüm metni parçalaman, doğru elemanı bulman ve tekrar birleştirmen gerekir.
-
+Örneğin sadece `Latte` fiyatını değiştirmek istediğinde tüm metni parçalaman, doğru elemanı bulman ve tekrar birleştirmen gerekir.
 - Raporlama sorguları karmaşıklaşır.  
-  Toplam tutar veya ürün bazlı satış raporu için sayısal hesap yerine metin parçalama gerekir; bu da performansı ve doğruluğu olumsuz etkiler.
+Toplam tutar veya ürün bazlı satış raporu için sayısal hesap yerine metin parçalama gerekir; bu da performansı ve doğruluğu olumsuz etkiler.
 
 ### İyi şema (sorumluluğu ayırmak)
 
@@ -150,7 +128,6 @@ ORDER_ITEM(id, order_id, product_id, quantity, unit_price)
 ```
 
 Bu yapı, hem SQL yazmayı kolaylaştırır hem de veri modelini uzun vadede daha yönetilebilir hale getirir.
-
 
 ## Uygulama: Mahalle kafe senaryosu
 
@@ -214,6 +191,8 @@ erDiagram
     ORDERS ||--|{ ORDER_ITEM : contains
     PRODUCT ||--o{ ORDER_ITEM : appears_in
 ```
+
+
 
 Bu diyagramda:
 
