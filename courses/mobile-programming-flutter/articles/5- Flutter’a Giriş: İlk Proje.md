@@ -1,4 +1,4 @@
-# Flutter’a Giriş: İlk Proje, Yapılar ve Minik Değişiklikler
+# Flutter’a Giriş: İlk Proje
 
 **Flutter ile “ilk projeyi” başlatmak çoğu zaman en heyecanlı (ve en karışık) adım. Bu yazıda amaç sadece `flutter create` çalıştırmak değil: oluşan projenin içindeki yapıları anlamak, temel entry-point akışını görmek ve küçük değişikliklerle “widget ağacı nasıl etkileniyor?” fikrini oturtmak.**
 
