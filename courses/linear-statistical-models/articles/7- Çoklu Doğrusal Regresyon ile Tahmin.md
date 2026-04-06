@@ -1,169 +1,243 @@
 # Çoklu Doğrusal Regresyon ile Tahmin
 
-Regresyon, bir hedef değişkenin sayısal değerini diğer değişkenleri kullanarak tahmin etmeye yarayan istatistiksel bir modelleme yaklaşımıdır. Temel amaç yalnızca tahmin üretmek değil, aynı zamanda hangi değişkenin sonuç üzerinde nasıl bir etkisi olduğunu da yorumlayabilmektir.
+Basit doğrusal regresyonda hedef değişken tek bir girdiye göre tahmin edilir. Gerçek hayatta ise sonuçlar çoğunlukla birden fazla etkene bağlıdır. Çoklu doğrusal regresyon, bu çok etkenli yapıyı tek model içinde ele alır.
 
-Çoklu doğrusal regresyon ise bu yaklaşımın birden fazla girdiyle çalışan halidir. Yani tek bir değişkene bakmak yerine, bir sonucu aynı anda etkileyen birden çok faktörü birlikte modele dahil eder. Bu sayede gerçek sistemlerde daha anlamlı ve daha dengeli tahminler elde edilir.
+Bu makalede hedef, öğrencilerin dönem sonu notu olan `final_exam_score` değerini birden fazla değişkenle tahmin etmektir.
 
-Pratikte çoklu doğrusal regresyon; kalite tahmini, maliyet öngörüsü, talep planlama veya performans analizi gibi birçok problemde kullanılır. Bu makaledeki örnekte de üretim hattı ölçümlerinden `quality_score` değerini tahmin ederek bu yaklaşımın temel mantığını adım adım göreceğiz.
+## Veri seti: Student Performance
 
-## Veri kümesi diyagramı
+- Veri seti adı: **Student Performance**
+- Dosya: `student_performance.csv`
+- Konum: `courses/linear-statistical-models/resources/student_performance.csv`
+- Sütunların tam açıklaması: `courses/linear-statistical-models/resources/article-student_performance-description.md`
+
+## Problem bağlamı
+
+Bir öğrencinin sınav notu yalnızca çalışma saatinden etkilenmez. Devam oranı, önceki dönem başarısı, uyku düzeni ve dönem boyunca çözülen soru sayısı da başarı üzerinde etkili olabilir. Bu nedenle tek değişkenli bir model çoğu durumda yetersiz kalır.
+
+Bu veri seti aşağıdaki soruyu modellemek için uygundur:
+
+**Bir öğrencinin dönem sonu notu, çalışma ve alışkanlık verileri birlikte kullanılarak tahmin edilebilir mi?**
+
+## Veri kümesi yapısı
 
 ```mermaid
 flowchart LR
-    A["runtime_hours"]
-    B["uptime_rate"]
-    C["maintenance_hours"]
-    D["sensor_alert_score"]
-    E["cycle_count"]
-    F["line"]
-    G["machine_id"]
-    Q["quality_score"]
+    A["study_hours_per_week"]
+    B["attendance_rate"]
+    C["sleep_hours_per_day"]
+    D["solved_question_count"]
+    E["previous_term_score"]
+    F["internet_usage_hours_per_day"]
+    Y["final_exam_score"]
 
-    A --> Q
-    B --> Q
-    C --> Q
-    D -. bağlamsal etki .-> Q
-    E -. bağlamsal etki .-> Q
-    F -. segment bilgisi .-> Q
-    G -. kayıt kimliği .-> Q
+    A --> Y
+    B --> Y
+    C --> Y
+    D --> Y
+    E --> Y
+    F --> Y
 ```
 
-Bu makalede odaklandığımız hedef değişken `quality_score` değeridir. Modelin ana girdileri `runtime_hours`, `uptime_rate` ve `maintenance_hours` sütunlarıdır; diğer alanlar veri setinin üretim bağlamını anlamaya yardımcı olur. Böylece “kalite” ifadesinin hangi ölçümlerden beslendiği baştan netleşir.
+Modelde hedef değişken `final_exam_score` olur. Diğer sütunlar modelin açıklayıcı değişkenleridir.
 
-Basit doğrusal regresyon, tek bir girdi değişkeniyle çıktı tahmini yapar. Gerçek dünyada ise bir sonucu aynı anda birden fazla etken belirler. Örneğin üretim kalitesi; çalışma süresi, sistemin erişilebilirliği ve bakım yoğunluğu gibi değişkenlerden birlikte etkilenir.
+- `study_hours_per_week`: Haftalık çalışma süresi
+- `attendance_rate`: Derse devam oranı
+- `sleep_hours_per_day`: Ortalama uyku süresi
+- `solved_question_count`: Dönem boyunca çözülen soru adedi
+- `previous_term_score`: Önceki dönem notu
+- `internet_usage_hours_per_day`: Günlük ders dışı internet kullanımı
 
-Çoklu doğrusal regresyon tam olarak bu noktada kullanılır: Birden fazla girdiyi aynı modelde birleştirerek hedef değişkeni tahmin eder. Bu makalede `quality_score` (kalite skoru) hedefini, `runtime_hours` (çalışma süresi), `uptime_rate` (kullanılabilirlik oranı) ve `maintenance_hours` (bakım süresi) ile modelleyeceğiz.
+## Çoklu doğrusal regresyonun matematiksel fikri
 
-## Model fikri
-
-Çoklu doğrusal regresyon şu formülle yazılır:
+Model genel olarak şu şekilde yazılır:
 
 `Y = b0 + b1*X1 + b2*X2 + ... + bp*Xp + e`
 
-Bu formülde:
-- `Y`: Bağımlı değişken, yani tahmin etmek istediğimiz değer (`quality_score`).
-- `X1, X2, ..., Xp`: Bağımsız değişkenler (bu makalede `runtime_hours`, `uptime_rate`, `maintenance_hours`).
-- `b0`: Sabit terim (intercept).
-- `b1, b2, ..., bp`: Her bağımsız değişkenin etkisini taşıyan katsayılar.
-- `e`: Modelin açıklayamadığı kısım (hata payı).
+- `Y`: Tahmin edilmek istenen değer (`final_exam_score`)
+- `X1 ... Xp`: Girdi değişkenleri
+- `b0`: Sabit terim (intercept)
+- `b1 ... bp`: Her değişkenin etkisini gösteren katsayılar
+- `e`: Modelin açıklayamadığı hata terimi
 
-Temel yorum kuralı şudur:
+Temel yorum kuralı:
 
-- `bj` değeri; ilgili `Xj` bir birim arttığında **diğer girdiler sabitken** `Y` değerinin ortalama olarak ne kadar değiştiğini özetler.
+- Bir katsayı, ilgili değişken bir birim arttığında (diğer değişkenler sabitken) tahmin edilen notun ortalama ne kadar değiştiğini ifade eder.
 
-## Örnek akış: `factory_quality_regression.csv`
+## Adım adım model kurma
 
-İlk adımda veriyi yükleyip yapısını hızlıca kontrol ediyoruz. Bu kontrol, eksik değer ve veri tipi problemlerini model kurmadan önce görmemizi sağlar.
+### 1) Veriyi yükleme ve ilk kontrol
 
 ```python
 import pandas as pd
 
-df = pd.read_csv("data/factory_quality_regression.csv")
-print(df.head(3))
+df = pd.read_csv(
+    "courses/linear-statistical-models/resources/student_performance.csv"
+)
+
+print(df.head())
 print(df.info())
+print(df.describe().T)
 ```
 
-Bu noktada özellikle sayısal sütunlarda eksik değer olup olmadığına bakılır. Eksik değer varsa, örnekte medyanla dolduruyoruz. Medyan, aykırı değerlere ortalamadan daha dayanıklı bir seçimdir.
+Bu aşamada amaç:
+
+- Sütun tiplerini doğrulamak
+- Beklenmeyen boş değer olup olmadığını görmek
+- Sayısal aralıkların gerçekçi olup olmadığını kontrol etmek
+
+### 2) Eksik değerler
+
+`LinearRegression` eksik değer kabul etmez. Bu veri setinde bazı hücreler bilinçli olarak boş bırakılmıştır. Sayısal sütunlarda yaygın bir yöntem, eksikleri o sütunun medyanı ile doldurmaktır (basit ve hızlı bir taban çözümdür).
 
 ```python
-numeric_columns = [
-    "sensor_alert_score",
-    "uptime_rate",
-    "maintenance_hours",
-    "cycle_count",
-    "quality_score",
-    "runtime_hours",
+print(df.isnull().sum())
+
+numeric_cols = [
+    "study_hours_per_week",
+    "attendance_rate",
+    "sleep_hours_per_day",
+    "solved_question_count",
+    "previous_term_score",
+    "internet_usage_hours_per_day",
+    "final_exam_score",
 ]
 
-for col in numeric_columns:
+for col in numeric_cols:
     df[col] = df[col].fillna(df[col].median())
 ```
 
-Sonraki adımda modelde kullanılacak girişleri (`X`) ve hedefi (`y`) ayırıyoruz. Burada sadece üç değişkeni bilinçli olarak seçiyoruz; amaç, çoklu regresyon mantığını temel düzeyde net görmek.
+Hedef değişkende de eksik satır kalmışsa, medyan ile doldurma istatistiksel olarak tartışmalıdır; alternatif olarak bu satırlar çıkarılabilir. Bu örnekte tek tip bir iş akışı için medyan doldurma kullanılmıştır.
+
+### 3) Girdi ve hedef ayrımı
+
+```python
+features = [
+    "study_hours_per_week",
+    "attendance_rate",
+    "sleep_hours_per_day",
+    "solved_question_count",
+    "previous_term_score",
+    "internet_usage_hours_per_day",
+]
+
+X = df[features]
+y = df["final_exam_score"]
+```
+
+Burada model, notu etkileyebilecek tüm sütunları birlikte kullanır. Bu yaklaşım, tek bir değişkene odaklanmaktan daha dengeli sonuç üretir.
+
+### 4) Eğitim ve test ayrımı (%80 / %20)
+
+Veri rastgele ikiye bölünür: **%80 eğitim**, **%20 test**. Model yalnızca eğitim kümesinde `fit` edilir; başarı ölçümü hem eğitim hem test üzerinde yapılır; genel performans için **test metrikleri** önceliklidir.
+
+```python
+from sklearn.model_selection import train_test_split
+
+# Aynı satırlar X ve y'de eşleşir; %20 test, %80 eğitim; random_state sonuçları sabitler
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.2, random_state=42
+)
+```
+
+### 5) Modeli eğitme
 
 ```python
 from sklearn.linear_model import LinearRegression
+
+# Sadece eğitim kümesi kullanılır; test bu aşamada modele verilmez
+model = LinearRegression()
+model.fit(X_train, y_train)
+```
+
+Bu işlem sonrası model, her sütun için bir katsayı öğrenir ve eğitim verisindeki doğrusal ilişkiyi temsil eder.
+
+### 6) Eğitim ve test performansı
+
+```python
 from sklearn.metrics import r2_score, mean_squared_error
 
-# Girdi değişkenleri
-features = ["runtime_hours", "uptime_rate", "maintenance_hours"]
-X = df[features]
+# Eğitim: modelin öğrendiği veriye uyumu; Test: genelleme kabiliyeti için daha kritik
+y_pred_train = model.predict(X_train)
+y_pred_test = model.predict(X_test)
 
-# Hedef değişken
-y = df["quality_score"]
-
-# Modeli oluştur ve eğit
-model = LinearRegression()
-model.fit(X, y)
-
-# Eğitim verisi üzerinde tahmin üret
-y_pred = model.predict(X)
-
-# Hızlı performans kontrolü
-print("R2:", float(r2_score(y, y_pred)))
-print("RMSE:", float(mean_squared_error(y, y_pred, squared=False)))
+print("Train R2:", round(float(r2_score(y_train, y_pred_train)), 4))
+print("Test R2 :", round(float(r2_score(y_test, y_pred_test)), 4))
+print(
+    "Train RMSE:",
+    round(float(mean_squared_error(y_train, y_pred_train, squared=False)), 4),
+)
+print(
+    "Test RMSE :",
+    round(float(mean_squared_error(y_test, y_pred_test, squared=False)), 4),
+)
 ```
 
-Buradaki metriklerin kısa anlamı:
-- `R2` (belirlilik katsayısı), `quality_score` değerlerindeki dalgalanmanın ne kadarını modelin açıkladığını gösterir.
-- `RMSE` (kök ortalama kare hata), model tahminlerinin gerçek `quality_score` değerlerinden ortalama olarak kaç puan saptığını gösterir.
+Metriklerin anlamı:
 
-Daha somut düşünelim:
-- `R2 = 0.78` ise, `quality_score` değişiminin yaklaşık `%78`'i modeldeki girdilerle açıklanıyor, `%22`'si model dışında kalıyor demektir.
-- `RMSE = 4.2` ise, model tahminleri gerçek değerden tipik olarak yaklaşık `4.2` puan sapıyor diye okunabilir.
+- `R2`: İlgilenilen kümede nottaki değişimin ne kadarının model tarafından açıklandığını gösterir.
+- `RMSE`: Tahminlerin gerçek nottan ortalama sapma büyüklüğünü puan cinsinden verir.
 
-Kısa değerlendirme çerçevesi:
-- `R2` için: `1`'e yaklaştıkça açıklama gücü artar, `0`'a yaklaştıkça düşer.
-- `RMSE` için: `0`'a yaklaştıkça hata azalır; daha düşük değer daha iyidir.
+Pratik yorum:
 
-Önemli not: Bu metrikler eğitim verisi üzerinde hesaplandığı için genellikle iyimser çıkar. Gerçek performansı görmek için eğitim/test ayrımı yapıp aynı metrikleri test setinde hesaplamak gerekir.
+- `R2` değeri yükseldikçe açıklama gücü artar.
+- `RMSE` değeri düştükçe tahmin hatası azalır.
+- Eğitim metrikleri testten belirgin iyiyse aşırı uyum (overfitting) riski değerlendirilmelidir.
 
-## Katsayılar nasıl okunur?
-
-Katsayıların sayısal karşılığını daha görünür hale getirelim:
+## Katsayıları anlamlandırma
 
 ```python
-import pandas as pd
+coef_df = pd.DataFrame(
+    {"feature": features, "coefficient": model.coef_}
+).sort_values("coefficient", ascending=False)
 
-coef_df = pd.DataFrame({
-    "feature": features,
-    "coefficient": model.coef_,
-}).sort_values("coefficient", ascending=False)
-
-print("beta0 (sabit):", float(model.intercept_))
-coef_df
+print("Intercept:", round(float(model.intercept_), 4))
+print(coef_df)
 ```
 
-Katsayıların değerlendirilmesi:
-- Katsayısı pozitifse: ilgili özellik artarken kalite skoru ortalama olarak artar (diğerleri sabit kabulüyle).
-- Katsayısı negatifse: ilgili özellik artarken kalite skoru ortalama olarak azalır.
-- Katsayının mutlak değeri büyüdükçe, ilgili değişkenin model üzerindeki doğrusal etkisi daha güçlü kabul edilir (ölçek farklarını dikkate almak şartıyla).
+Katsayı yorumu yapılırken:
 
-Not: `uptime_rate` ve `maintenance_hours` gibi değişkenler birlikte hareket edebilir. Bu duruma çoklu doğrusal regresyon bağlamında **çoklu bağlantı (multicollinearity)** denir. Çoklu bağlantı yükseldiğinde katsayıların istatistiksel yorumu daha hassas hale gelir; bu nedenle sonuçların korelasyon analizi ve keşif grafikleri ile birlikte değerlendirilmesi önerilir.
+- Pozitif katsayı: değişken arttıkça not artma eğilimindedir.
+- Negatif katsayı: değişken arttıkça not düşme eğilimindedir.
+- Katsayı büyüklükleri yorumlanırken değişken ölçekleri dikkate alınmalıdır.
 
-## Basit bir tahmin örneği
+Örneğin `solved_question_count` çok büyük sayılarla, `sleep_hours_per_day` daha küçük aralıklarla ölçülür. Bu nedenle yalnızca ham katsayı büyüklüğüne bakıp “en güçlü etki budur” demek her zaman doğru olmaz.
 
-Elinizde yeni bir durum için ölçümler varsa:
+## Yeni gözlem için tahmin üretme
 
 ```python
-new_row = pd.DataFrame([{
-    "runtime_hours": 9.0,
-    "uptime_rate": 86.0,
-    "maintenance_hours": 6.5,
-}])
+new_data = pd.DataFrame(
+    [
+        {
+            "study_hours_per_week": 18,
+            "attendance_rate": 90,
+            "sleep_hours_per_day": 7.2,
+            "solved_question_count": 1100,
+            "previous_term_score": 76,
+            "internet_usage_hours_per_day": 2.8,
+        }
+    ]
+)
 
-pred = model.predict(new_row)
-print("Tahmin edilen quality_score:", float(pred[0]))
+pred = model.predict(new_data)
+print("Tahmin edilen final_exam_score:", round(float(pred[0]), 2))
 ```
 
-Bu aşamada dikkat edilmesi gereken temel nokta şudur: `new_row` içinde kullanılan sütun adları, eğitimde tanımlanan `features` listesiyle birebir aynı olmalıdır. Sıra veya adlandırma uyuşmazlığında model hatalı sonuç üretebilir ya da doğrudan hata verebilir.
+Burada kritik nokta, `new_data` içindeki sütun adlarının model eğitiminde kullanılan sütunlarla birebir aynı olmasıdır.
 
-## Uyarılar ve iyi uygulama notları
+## Bu modelin güçlü ve zayıf yönleri
 
-Model doğrusal olduğu için aşağıdaki risklere dikkat etmek gerekir:
-- Gerçek ilişki doğrusal değilse tahmin hatası artabilir.
-- Aykırı gözlemler (outlier), katsayıları beklenenden fazla etkileyebilir.
-- Eğitim ve değerlendirmeyi aynı veri üzerinde yapmak yanıltıcı sonuç verebilir; mümkünse eğitim/test ayrımı yapılmalıdır.
+Güçlü yönler:
 
-Bu nedenle çoklu doğrusal regresyonu tek başına katsayı çıktısı olarak değil; grafik yorumları, değişken dağılımları ve hata metrikleriyle birlikte ele almak daha güvenilir bir yaklaşımdır.
+- Kurulumu hızlıdır.
+- Sonuçlar yorumlanabilir katsayılar üretir.
+- Temel tahmin problemlerinde iyi bir başlangıç sağlar.
+
+Sınırlılıklar:
+
+- İlişki doğrusal değilse performans düşebilir.
+- Aykırı değerler katsayıları bozabilir.
+- Tek bir `train_test_split` bölünmesi şanslı veya şanssız çıkabilir; gerekirse çapraz doğrulama (cross-validation) ile sonuçlar teyit edilir.
+
+Bu nedenle katsayı yorumları, eğitim/test metrikleri ve alan bilgisi birlikte değerlendirilmelidir.
 
