@@ -184,6 +184,62 @@ Pratik yorum:
 - `RMSE` değeri düştükçe tahmin hatası azalır.
 - Eğitim metrikleri testten belirgin iyiyse aşırı uyum (overfitting) riski değerlendirilmelidir.
 
+### 7) Çoklu regresyonda görsel model değerlendirmesi (amaç, yöntem, yorum)
+
+Bu bölümde amaç, model performansını yalnızca tek bir skora indirgemeden görsel olarak doğrulamaktır. Basit doğrusal regresyonda tek bir `X` üzerinden çizgi grafiği üretmek doğaldır; ancak çoklu doğrusal regresyonda model aynı anda birden fazla değişken kullandığı için tek eksende "regresyon doğrusu" çizmek teknik olarak doğru değildir. Bu nedenle değerlendirme için aşağıdaki iki grafik tercih edilir:
+
+- **Gerçek vs Tahmin grafiği (Actual vs Predicted):** Modelin tahminlerinin gerçek değerlere ne kadar yaklaştığını görselleştirir.
+- **Residual grafiği:** Hataların (gerçek - tahmin) rastgele dağılıp dağılmadığını kontrol eder.
+
+Bu yaklaşımın amacı, sayısal metrikleri (`R2`, `RMSE`) görsel kanıtla desteklemektir. Yalnızca metriklere bakmak, bazı hata desenlerini kaçırabilir.
+
+```python
+import matplotlib.pyplot as plt
+import numpy as np
+from sklearn.metrics import mean_squared_error
+
+# Test kümesi tahmini
+y_pred_test = model.predict(X_test)
+
+# 1) Gerçek vs Tahmin
+plt.figure(figsize=(7, 5))
+plt.scatter(y_test, y_pred_test, alpha=0.6)
+
+line_min = min(y_test.min(), y_pred_test.min())
+line_max = max(y_test.max(), y_pred_test.max())
+plt.plot([line_min, line_max], [line_min, line_max], "r--", linewidth=2)
+
+plt.xlabel("Gerçek Not (y_test)")
+plt.ylabel("Tahmin Edilen Not (y_pred)")
+plt.title("Çoklu Regresyon: Gerçek vs Tahmin")
+plt.grid(alpha=0.3)
+plt.show()
+
+# 2) Residual grafiği
+residuals = y_test - y_pred_test
+
+plt.figure(figsize=(7, 5))
+plt.scatter(y_pred_test, residuals, alpha=0.6)
+plt.axhline(0, color="red", linestyle="--", linewidth=2)
+plt.xlabel("Tahmin Edilen Not")
+plt.ylabel("Residual (Gerçek - Tahmin)")
+plt.title("Residual Grafiği")
+plt.grid(alpha=0.3)
+plt.show()
+
+# 3) RMSE kontrolü
+rmse = np.sqrt(mean_squared_error(y_test, y_pred_test))
+print("RMSE:", round(float(rmse), 3))
+```
+
+Grafiklerin yorumlanması:
+
+- Noktalar `Gerçek vs Tahmin` grafiğinde kırmızı kesikli referans çizgisine yaklaştıkça modelin tahmini isabetlidir.
+- `Residual` grafiğinde noktaların `0` çizgisi etrafında rastgele ve dengeli dağılması beklenir.
+- Belirli bir desene (eğri, fan açılması, tek tarafta yığılma) dönüşen residual dağılımı, model varsayımlarının zayıfladığına işaret edebilir.
+
+Bu iki grafik birlikte okunduğunda, modelin yalnızca "kaç puan hata yaptığı" değil, **hatayı nasıl yaptığı** da anlaşılır. Çoklu regresyonda güvenilir değerlendirme için bu görsel kontrol adımı pratikte önemlidir.
+
 ## Katsayıları anlamlandırma
 
 ```python
