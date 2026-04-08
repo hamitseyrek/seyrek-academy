@@ -1,12 +1,12 @@
 # 3C – Arduino C/C++ 101: Çözümler ve Açıklamalar
 
-Bu dosya, `3- Arduino’ya Giriş.md` içinde 7. bölümde yer alan **S41–S50** numaralı sorular için özet çözümler içerir.
+Bu dosya, `3S- Arduino C/C++ 101: Soru Seti` içindeki **S1-S10** numaralı sorular için özet çözümler içerir.
 
 ---
 
-## S41 – Veri Tipi Seçimi
+## S1 – Veri Tipi Seçimi
 
-**41.1) Örnek seçimler**  
+**1.1) Örnek seçimler**  
 - 0’dan 100’e kadar sayan döngü değişkeni → `int`  
   - Değer aralığı küçük, tam sayı; `int` yeterlidir.  
 - 0–255 arası parlaklık değeri → `byte` veya `uint8_t`  
@@ -18,27 +18,27 @@ Bu dosya, `3- Arduino’ya Giriş.md` içinde 7. bölümde yer alan **S41–S50*
 
 ---
 
-## S42 – Operatörler ve Koşullar
+## S2 – Operatörler ve Koşullar
 
-**42.1)**  
+**2.1)**  
 - `if (x > 10 && x < 20)` → `x` değeri **10’dan büyük ve 20’den küçük** olduğu sürece koşul true olur (örneğin 11–19 arası değerler).  
 
-**42.2)**  
+**2.2)**  
 - `if (y == 0 || y == 255)` → `y` değeri **0 ya da 255** olduğunda koşul true olur; diğer tüm değerlerde false.  
 
 ---
 
-## S43 – Kapsam (Scope)
+## S3 – Kapsam (Scope)
 
-**43.1)**  
+**3.1)**  
 - Fonksiyon içinde tanımlanan bir değişken yalnızca o fonksiyonun içinde görünür; fonksiyon bittiğinde bellekten silinir (yerel değişken).  
 - Global (dosya başında tanımlanan) değişkenler tüm fonksiyonlardan erişilebilir; farklı fonksiyonların aynı değişken üzerinden haberleşmesine izin verir, fakat kontrol edilmezse beklenmedik yan etkilere de yol açabilir.  
 
 ---
 
-## S44 – Döngü Kullanımı
+## S4 – Döngü Kullanımı
 
-**44.1) Örnek tasvir**  
+**4.1) Örnek tasvir**  
 - Bir sayaç değişkeni `i` 0’dan başlatılır.  
 - Koşul kısmında `i < 10` olduğu sürece döngünün devam etmesi belirtilir.  
 - Her iterasyonda `i` bir artırılır (`i++`).  
@@ -46,18 +46,18 @@ Bu dosya, `3- Arduino’ya Giriş.md` içinde 7. bölümde yer alan **S41–S50*
 
 ---
 
-## S45 – Fonksiyon Amacı
+## S5 – Fonksiyon Amacı
 
-**45.1) Örnek gerekçeler**  
+**5.1) Örnek gerekçeler**  
 - Tekrarlanan kodu tek yere toplar; değişiklik gerektiğinde yalnızca fonksiyonun içi güncellenir.  
 - Okunabilirliği artırır; karmaşık işlemleri isimlendirilmiş bloklar (örneğin `hesaplaSicaklik()`) olarak görmek, kodu takip etmeyi kolaylaştırır.  
 - Hata ayıklamayı basitleştirir; fonksiyonlar tek tek test edilebilir ve hatanın hangi blokta olduğu daha rahat bulunur.  
 
 ---
 
-## S46 – Eşik Kontrol Fonksiyonu Fikri
+## S6 – Eşik Kontrol Fonksiyonu Fikri
 
-**46.1) Örnek tasvir**  
+**6.1) Örnek tasvir**  
 - Fonksiyon imzası mantıksal olarak şu şekildedir: “ADC değeri ve eşik değeri alır, boolean döndürür”.  
 - İç mantık:  
   - Eğer `adcDegeri > esikDegeri` ise `true` döndür.  
@@ -66,9 +66,9 @@ Bu dosya, `3- Arduino’ya Giriş.md` içinde 7. bölümde yer alan **S41–S50*
 
 ---
 
-## S47 – Dizide Ortalama Hesabı
+## S7 – Dizide Ortalama Hesabı
 
-**47.1) Örnek adımlar**  
+**7.1) Örnek adımlar**  
 - Bir toplam değişkeni sıfırla (örneğin `toplam = 0`).  
 - `for` döngüsü ile indeksleri 0’dan 9’a kadar dolaş.  
 - Her adımda `toplam`a `readings[i]` değerini ekle.  
@@ -76,9 +76,9 @@ Bu dosya, `3- Arduino’ya Giriş.md` içinde 7. bölümde yer alan **S41–S50*
 
 ---
 
-## S48 – Çok Koşullu Karar
+## S8 – Çok Koşullu Karar
 
-**48.1) Örnek yapı**  
+**8.1) Örnek yapı**  
 - Eğer `deger < altEsik` ise → düşük durum.  
 - Aksi halde ve `deger < ustEsik` ise → orta durum.  
 - Aksi halde (yani `deger >= ustEsik`) → yüksek durum.  
@@ -87,9 +87,9 @@ Bu, `if / else if / else` yapısı ile kodlanacak üç durumlu bir karar mekaniz
 
 ---
 
-## S49 – Sayaç ile Zamanlama
+## S9 – Sayaç ile Zamanlama
 
-**49.1) Örnek strateji**  
+**9.1) Örnek strateji**  
 - Global veya statik bir sayaç değişkeni tanımlanır (örneğin `int sayac = 0;`).  
 - `loop()` içinde her döngüde sayaç bir artırılır.  
 - Eğer `sayac % 100 == 0` ise, yani sayaç 100’ün katına ulaştıysa, seri çıktı tetiklenir.  
@@ -97,9 +97,9 @@ Bu, `if / else if / else` yapısı ile kodlanacak üç durumlu bir karar mekaniz
 
 ---
 
-## S50 – Dizi ile LED Dizisi Kontrolü Fikri
+## S10 – Dizi ile LED Dizisi Kontrolü Fikri
 
-**50.1) Örnek açıklama**  
+**10.1) Örnek açıklama**  
 - LED pinleri bir dizide tutulur: `{2, 3, 4}`.  
 - Bir `for` döngüsü ile dizinin başından sonuna kadar gidilir.  
 - Her iterasyonda, ilgili pin çıkış olarak ayarlanır ve sırayla `HIGH` yapılır (LED yanar), kısa bir gecikmeden sonra `LOW` yapılır (söner).  
