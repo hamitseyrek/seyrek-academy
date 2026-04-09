@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_started_kit/pages/notification_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -24,7 +25,25 @@ class HomePage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.blue,
-        title: const Text('Flutter Kit'),
+        title: const Text('Flutter Kit',
+        style: TextStyle(
+          color: Colors.white,
+          fontWeight: FontWeight.bold
+        ),),
+        actions: [
+          IconButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const NotificationPage()),
+              );
+            },
+            icon: const Icon(Icons.notifications_none),
+            color: Colors.white,
+            tooltip: 'Bildirimler',
+          )
+        ],
       ),
       drawer: Drawer(
         child: Container(
