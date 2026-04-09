@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_started_kit/pages/notification_page.dart';
+import 'package:flutter_started_kit/pages/page_one.dart';
+import 'package:flutter_started_kit/pages/page_three.dart';
+import 'package:flutter_started_kit/pages/page_two.dart';
+import 'package:flutter_started_kit/widget/app_bottom_nav_bar.dart';
+import 'package:flutter_started_kit/widget/app_drawer.dart';
 
 void main() {
   runApp(const MyApp());
@@ -17,9 +22,21 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
 
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  int _selectedIndex = 0;
+
+  static const List<Widget> _pages = [
+    PageOne(),
+    PageTwo(),
+    PageThree(),
+  ];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -45,32 +62,15 @@ class HomePage extends StatelessWidget {
           )
         ],
       ),
-      drawer: Drawer(
-        child: Container(
-          color: Colors.orange,
-        ),
-      ),
-      body: const Center(
-        child: Text('Hello, World!'),
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: Colors.purple,
-        selectedItemColor: Colors.white,
-        unselectedItemColor: Colors.grey,
-        items: [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Anasayfa',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.settings),
-            label: 'Ayarlar',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: 'Profil',
-          ),
-        ],
+      drawer: AppDrawer(),
+      body: _pages[_selectedIndex],
+      bottomNavigationBar: AppBottomNavBar(
+        currentIndex: _selectedIndex,
+        onTap: (index) {
+          setState(() {
+            _selectedIndex = index;
+          });
+        },
       ),
     );
   }
