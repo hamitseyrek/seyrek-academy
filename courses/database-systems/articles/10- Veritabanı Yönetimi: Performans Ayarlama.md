@@ -43,6 +43,9 @@ erDiagram
         decimal list_price
     }
 ```
+
+
+
 *Şekil 1: Örneklerde kullanılan e-ticaret veritabanında `customers`, `orders`, `order_items` ve `products` tabloları arasındaki temel ilişkiler gösterilir.*
 
 Bu yapı üzerinden performansı etkileyen sık etkenler şunlardır:
@@ -109,14 +112,14 @@ FROM orders
 WHERE customer_id = 42;
 ```
 
-3. Aynı sorgu için Workbench'te `EXPLAIN` çalıştırılır ve planda `type=ALL` benzeri tam tarama sinyalleri kontrol edilir.
-4. İndeks oluşturulur:
+1. Aynı sorgu için Workbench'te `EXPLAIN` çalıştırılır ve planda `type=ALL` benzeri tam tarama sinyalleri kontrol edilir.
+2. İndeks oluşturulur:
 
 ```sql
 CREATE INDEX idx_orders_customer_id ON orders(customer_id);
 ```
 
-5. Aynı sorgu tekrar çalıştırılır; süre yeniden ölçülür ve `EXPLAIN` çıktısında indeks kullanımı (`key=idx_orders_customer_id`) doğrulanır.
+1. Aynı sorgu tekrar çalıştırılır; süre yeniden ölçülür ve `EXPLAIN` çıktısında indeks kullanımı (`key=idx_orders_customer_id`) doğrulanır.
 
 Bu karşılaştırma, indeksin yalnızca teorik bir kavram olmadığını; ölçülebilir bir performans kazanımı ürettiğini net biçimde gösterir.
 
@@ -220,6 +223,9 @@ flowchart TD
     G -- Evet --> H[Değişikliği kalıcılaştır]
     G -- Hayır --> I[Bir sonraki darboğazı analiz et]
 ```
+
+
+
 *Şekil 1: Sorgu performansı iyileştirme döngüsü, plan analizi ve ölçüm adımlarıyla sistematik karar akışını gösterir.*
 
 ### 2.11. Kısa bir uygulama senaryosu
