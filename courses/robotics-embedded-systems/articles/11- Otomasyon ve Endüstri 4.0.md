@@ -18,7 +18,7 @@ Bu makalede önce Endüstri 4.0'ın temeli açıklanır.
 Ardından otomasyon seviyeleri, PLC ve SCADA mimarileri, haberleşme protokolleri ele alınır.
 Son bölümde ise pratik bir proje senaryosu üzerinden uçtan uca bir otomasyon tasarımı örneklendirilir.
 
-## 1. Endüstri
+## 1. Endüstri 4.0
 
 Endüstri 4.0, üretim sistemlerinde fiziksel dünya ile dijital dünyanın entegre çalışmasıdır.
 Makineler sensörlerle veri üretir.
@@ -31,65 +31,63 @@ Bu yaklaşımın özünde üç fikir yer alır:
 - Ölçümlerin anlamlı karara dönüşmesi
 - Kararların sisteme hızlı geri uygulanması
 
-Bu üçlü birlikte çalışmadığında dijitalleşme çoğunlukla raporlama seviyesinde kalır.
+Bu üçlü birlikte çalışmadığında dijitalleşme çoğunlukla raporlama seviyesinde kalır.  
 Endüstri 4.0 yaklaşımında ise hedef, kapalı çevrim (ölçüm -> karar -> eylem -> yeniden ölçüm) iyileştirme döngüsüdür.
 
-### 1.1. Endüstri 4.0 Nedir?
-
-### 1.2. Endüstri Devrimlerinin Kısa Bağlamı
+### 1.1. Endüstri Devrimlerinin Kısa Bağlamı
 
 Endüstri 4.0'ı doğru konumlandırmak için önceki devrimlere kısa bakış faydalıdır.
 
-#### 1.2.1. Endüstri 1.0: Mekanikleşme
+#### 1.1.1. Endüstri 1.0: Mekanikleşme
 
 Buhar gücü ve mekanik makineler üretimi dönüştürdü.
 Üretim miktarı arttı ancak süreç görünürlüğü sınırlı kaldı.
 
-#### 1.2.2. Endüstri 2.0: Elektrifikasyon ve Seri Üretim
+#### 1.1.2. Endüstri 2.0: Elektrifikasyon ve Seri Üretim
 
 Elektrik motorları ve montaj hattı modeli verimlilikte sıçrama yarattı.
 Standart ürün, yüksek hacim ve düşük birim maliyet mümkün oldu.
 
-#### 1.2.3. Endüstri 3.0: Otomasyon ve Bilgisayarlaşma
+#### 1.1.3. Endüstri 3.0: Otomasyon ve Bilgisayarlaşma
 
 PLC sistemleri, CNC makineler ve bilgisayar tabanlı kontrol öne çıktı.
 Süreçler otomatikleşti fakat sistemler çoğunlukla kendi içinde kapalıydı.
 
-#### 1.2.4. Endüstri 4.0: Bağlanabilirlik ve Veri Odaklı Karar
+#### 1.1.4. Endüstri 4.0: Bağlanabilirlik ve Veri Odaklı Karar
 
 Siber-fiziksel sistemler, IoT, bulut altyapısı ve yapay zeka birlikte devreye girdi.
 Makine verisi sadece yerel panelde değil, kurumsal karar katmanlarında da kullanılabilir hale geldi.
 
-### 1.3. Endüstri 4.0 Bileşenleri
+### 1.2. Endüstri 4.0 Bileşenleri
 
 Endüstri 4.0 tek bir teknoloji değil, bir teknoloji kümesidir.
 Her bileşen farklı bir sorunu çözer.
 
-#### 1.3.1. IoT (Nesnelerin İnterneti)
+#### 1.2.1. IoT (Nesnelerin İnterneti)
 
 IoT, fiziksel cihazların internete veya yerel ağa bağlı veri düğümleri haline gelmesidir.
 Sensör değerleri, cihaz durumları ve alarm bilgileri gerçek zamanlı toplanabilir.
 Bu sayede sahadaki görünürlük artar.
 
-#### 1.3.2. Big Data
+#### 1.2.2. Big Data
 
 Big Data, yüksek hacimli ve yüksek hızda üretilen verinin, geleneksel veri işleme araçlarının sınırlarını aşacak ölçekte yönetilmesini ifade eder.
 Üretim hatlarında saniyede binlerce veri noktası oluşabilir.
 Bu ölçek, klasik tablo raporlarının ötesinde veri işleme yaklaşımı gerektirir.
 
-#### 1.3.3. Cloud Computing
+#### 1.2.3. Cloud Computing
 
 Bulut bilişim, işlem ve depolama kapasitesinin ihtiyaç kadar kullanılmasını sağlar.
 Özellikle çok lokasyonlu yapılarda merkezi görünürlük için önemlidir.
 Bununla birlikte kritik kontrol kararlarında gecikme ve bağlantı riski dikkate alınmalıdır.
 
-#### 1.3.4. Yapay Zeka
+#### 1.2.4. Yapay Zeka
 
 Yapay zeka, arıza tahmini, kalite sınıflandırma ve enerji optimizasyonu gibi alanlarda değer üretir.
 Modelin sahadaki davranışı eğitim verisinin kalitesine bağlıdır.
 Bu nedenle veri toplama disiplini model başarısının temelidir.
 
-#### 1.3.5. Siber-Fiziksel Sistemler
+#### 1.2.5. Siber-Fiziksel Sistemler
 
 Siber-fiziksel sistem, fiziksel süreç ile yazılım karar katmanının sürekli etkileşim içinde olmasıdır.
 Süreçteki bir değişim dijital modelde karşılık bulur.
@@ -109,35 +107,33 @@ Otomasyonun temel kazanımları:
 - İş güvenliği iyileştirmesi
 - İzlenebilirlik ve raporlanabilirlik
 
-Ancak yanlış tasarlanmış otomasyon, hataları daha hızlı üretir.
+Ancak yanlış tasarlanmış otomasyon, hataları daha hızlı üretir.  
 Bu nedenle otomasyon yalnızca teknik entegrasyon değil, süreç mühendisliği çalışmasıdır.
 
-### 2.1. Otomasyon Nedir ve Neden Önemlidir?
-
-### 2.2. Otomasyon Seviyeleri
+### 2.1. Otomasyon Seviyeleri
 
 Bir tesiste tüm bölümlerin aynı otomasyon seviyesinde olması zorunlu değildir.
 Doğru seviye seçimi yatırım geri dönüşü için kritiktir.
 
-#### 2.2.1. Manuel Seviye
+#### 2.1.1. Manuel Seviye
 
 İşlemler operatör ağırlıklı yürütülür.
 Ölçüm ve kayıtlar sınırlı olabilir.
 Düşük başlangıç maliyeti olsa da sürdürülebilir kalite risklidir.
 
-#### 2.2.2. Yardımlı Otomasyon
+#### 2.1.2. Yardımlı Otomasyon
 
 Bazı adımlar sensör, röle veya zamanlayıcı ile otomatikleşmiştir.
 Kararların önemli bölümü hâlâ insan kontrolündedir.
 Geçiş seviyesi olarak yaygın görülür.
 
-#### 2.2.3. Kısmi Otomasyon
+#### 2.1.3. Kısmi Otomasyon
 
 Süreç adımlarının belirli bir bölümü PLC veya gömülü kontrolcü ile yönetilir.
 Alarm, sayaç ve temel izleme mekanizmaları bulunur.
 Operasyonel verimlilikte belirgin artış sağlar.
 
-#### 2.2.4. Tam Otomasyon
+#### 2.1.4. Tam Otomasyon
 
 Üretim adımları merkezi kontrol mantığıyla sürekli çalışır.
 HMI ekranları, alarm yönetimi, veri kayıt sistemi ve uzaktan izleme bileşenleri entegredir.
@@ -197,6 +193,8 @@ flowchart LR
     C --> D["Operatör İstasyonu (HMI)"]
     C --> E["Raporlama ve Veri Arşivi"]
 ```
+
+
 
 *Şekil 1: PLC saha kontrolünü yürütürken SCADA katmanı merkezi izleme, alarm ve raporlama görevini üstlenir.*
 
@@ -362,6 +360,8 @@ flowchart TD
     E --> B
 ```
 
+
+
 *Şekil 2: Uçtan uca otomasyon mimarisi, saha verisinin kontrol ve analitik katmanlardan geçerek iyileştirme döngüsüne geri dönmesini gösterir.*
 
 Bu mimari doğrusal değil döngüseldir.
@@ -408,4 +408,3 @@ Otomasyon ve Endüstri 4.0, robotik sistemlerin yalnızca hareket eden makine ol
 Asıl hedef, ölçülebilir, yönetilebilir ve sürekli iyileştirilebilir bir üretim sistemi kurmaktır.
 PLC ve SCADA altyapısı, doğru haberleşme protokolü seçimi ve veri odaklı iyileştirme kültürü bu hedefin temelini oluşturur.
 Küçük bir otomasyon projesinden başlayan disiplinli yaklaşım, daha büyük endüstriyel dönüşüm adımlarına güvenli geçiş sağlar.
-
