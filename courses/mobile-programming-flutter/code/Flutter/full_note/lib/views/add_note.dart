@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:full_note/models/note_model.dart';
 import 'package:full_note/view_models/note_add_view_model.dart';
+import 'package:full_note/views/widget/custom_input_decoration.dart';
 
 class AddNote extends StatefulWidget {
   final NoteAddViewModel viewModel;
@@ -51,20 +52,20 @@ class _AddNoteState extends State<AddNote> {
               SizedBox(height: 20),
               TextField(
                 controller: _titleController,
-                decoration: _inputDecoration(
-                  'Not Başlığı',
+                decoration: customInputDecoration(
                   'Notunuzun başlığını buraya yazın',
-                  Icon(Icons.title_outlined)
+                  Icon(Icons.title_outlined),
+                  labelText: 'Not Başlığı',
                 ),
               ),
               SizedBox(height: 20),
               TextField(
                 controller: _contentController,
-                decoration: _inputDecoration(
-                  'Not İçeriği',
+                decoration: customInputDecoration(
                   'Notunuzun içeriğini buraya yazın',
-                  Icon(Icons.note_alt_outlined)
-                ),
+                  Icon(Icons.note_alt_outlined),
+                 labelText: 'Not İçeriği'
+                 ),
                 maxLines: 5,
               ),
               SizedBox(height: 20),
@@ -93,27 +94,5 @@ class _AddNoteState extends State<AddNote> {
                 ),
         ),
       ));
-  }
-
-  InputDecoration _inputDecoration(
-    String labelText,
-    String hintText,
-    Widget prefixIcon,
-  ) {
-    return InputDecoration(
-                labelText: labelText,
-                hintText: hintText,
-                prefixIcon: prefixIcon,
-                filled: true,
-                fillColor: Colors.white,
-                enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                  borderSide: BorderSide(color: Colors.grey.shade300),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                  borderSide: BorderSide(color: Colors.indigo),
-                ),
-              );
   }
 }
