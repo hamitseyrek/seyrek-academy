@@ -12,7 +12,7 @@ class NotesRepository {
     return notesData.map((noteString) {
       final noteMap = jsonDecode(noteString) as Map<String, dynamic>;
       return Note(
-        id: noteMap['id'] as int,
+        id: noteMap['id'] as String,
         title: noteMap['title'] as String,
         content: noteMap['content'] as String,
       );

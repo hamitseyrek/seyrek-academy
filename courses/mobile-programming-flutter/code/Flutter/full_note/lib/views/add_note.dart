@@ -76,7 +76,7 @@ class _AddNoteState extends State<AddNote> {
                   final content = _contentController.text;
           
                   if (title.isNotEmpty && content.isNotEmpty) {
-                    final note = Note(id: DateTime.now().microsecondsSinceEpoch, title: title, content: content);
+                    final note = Note(id: DateTime.now().microsecondsSinceEpoch.toString(), title: title, content: content);
                     await widget.viewModel.saveNote(note);
                     Navigator.of(context).pop();
                   } else {

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:full_note/repository/note_repository_fb.dart';
 import 'package:full_note/repository/notes_repository.dart';
 import 'package:full_note/view_models/note_add_view_model.dart';
 import 'package:full_note/view_models/notes_list_vies_model.dart';
@@ -13,7 +14,7 @@ class NotesPage extends StatefulWidget {
 }
 
 class _NotesPageState extends State<NotesPage> {
-  final vm = NotesListViesModel(NotesRepository());
+  final vm = NotesListViesModel(NotesRepository(), NoteRepositoryFb());
   final TextEditingController _searchController = TextEditingController();
 
 
@@ -127,7 +128,7 @@ class _NotesPageState extends State<NotesPage> {
   }
 
   void gotoAddNote(BuildContext context) {
-    final addVm = NoteAddViewModel(NotesRepository());
+    final addVm = NoteAddViewModel(NotesRepository(), NoteRepositoryFb());
     Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => AddNote(viewModel: addVm)),
