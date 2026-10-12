@@ -1,10 +1,10 @@
 # Veri Analitiği ve İstatistiksel Analize Giriş
 
-Yazılım her tıklamayı, sensör her ölçümü, araç her konumu kaydedebilir. Kayıt arttıkça depolama büyür; ancak bu büyüme tek başına daha iyi bir karar üretmez. Veri analitiği, ham kaydın hangi soruya cevap vereceğini ve bu cevabın hangi eyleme bağlanacağını belirleme işidir. İstatistiksel analiz de aynı hattın devamında, cevabın rastlantıdan ayrılıp ayrılmadığını yoklar.
+Yazılım her tıklamayı, sensör her ölçümü, araç her konumu kaydedebilir. Kayıt arttıkça depolama büyür; ancak bu büyüme tek başına daha iyi bir karar üretmez. Veri analitiği, ham kaydın hangi soruya cevap vereceğini ve bu cevabın hangi eyleme bağlanacağını belirleme işidir. İstatistiksel analiz de aynı hattın devamında, cevabın rastlantıdan ayrılıp ayrılmadığını sınar.
 
 ## Ham kayıt neden tek başına yetmez
 
-**Veri**, bir olaya veya ölçüme ait, henüz yorumlanmamış kayıttır. Bağlam eklenmeden okunduğunda çoğu zaman tek başına bir karar vermez.
+**Veri**, bir olaya veya ölçüme ait, henüz yorumlanmamış kayıttır. Bağlam eklenmeden okunduğunda çoğu zaman tek başına karar için yeterli olmaz.
 
 Örneği netleştirmek için aşağıdaki tablo, kurmaca bir teslimat aracının iki anlık konum kaydını gösterir:
 
@@ -78,11 +78,11 @@ Her halka ayrı bir iştir. Toplama yöntemleri, hazırlama adımları ve analiz
 
 ## Analitik üç alanın kesişiminde durur
 
-Veri analitiği, veriyi sorulara cevap verecek biçimde incelemek ve bu cevapları karara bağlamaktır. Üç alan birlikte durmadığında sonuç ya hesaplanamaz ya da yanlış işe uygulanır.
+Veri analitiği, veriyi sorulara cevap verecek biçimde incelemek ve bu cevapları karara bağlamaktır. Üç alan birlikte durmadığında sonuç ya hesaplanamaz ya da yanlış bağlama uygulanır.
 
 **Bilgisayar bilimi** kaydı toplar, saklar ve işler. Konum satırları bir tabloda durmuyorsa hız da hesaplanamaz.
 
-**İstatistik**, dağılımı, değişkenliği ve "bu sonuç rastlantı olabilir mi?" sorusunu ele alır. Tek bir 140 km/sa değeri bir olay cümlesi kurar; bir araç grubunun bu aşımı sistemli yapıp yapmadığı ancak birçok kayıtla anlaşılır.
+**İstatistik**, dağılımı, değişkenliği ve "bu sonuç rastlantı olabilir mi?" sorusunu ele alır. Tek bir 140 km/sa değeri tek bir olayı anlatır; bir araç grubunun bu aşımı sistemli yapıp yapmadığı ancak birçok kayıtla anlaşılır.
 
 **Alan bilgisi**, sayının yazılımda, işletmede veya fiziksel sistemde ne anlama geldiğini bilir. Hız sınırını, aracın görevini ve uyarının sürücüyü nasıl etkileyeceğini hesap tek başına söylemez.
 
