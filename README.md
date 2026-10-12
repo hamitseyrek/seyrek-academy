@@ -8,7 +8,10 @@ Seyrek Academy, akademik ders içerikleri, yazılım projeleri ve öğrenme kayn
 - Doğrusal İstatistik Modeller
 - Veri Tabanı Yönetim Sistemi
 - Robotik ve Gömülü Sistemler
+- Robotik Uygulamalar
 - Mobil Programlama
+- Veri Analitiği
+- Mesleki İngilizce
 
 
 ## Amaç
