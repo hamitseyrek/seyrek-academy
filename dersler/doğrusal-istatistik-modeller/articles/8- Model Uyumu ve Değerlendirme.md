@@ -8,9 +8,9 @@ Bu makalede, yalnızca `ratings.csv` veri seti kullanılarak `rating` tahmini i�
 
 ## Veri seti: Movie Ratings
 
-- Veri klasörü: `courses/linear-statistical-models/resources/movie-rating-ds/`
+- Veri klasörü: `dersler/doğrusal-istatistik-modeller/resources/movie-rating-ds/`
 - Dosya: `ratings.csv`
-- Açıklama dokümanı: `courses/linear-statistical-models/resources/2- Film Puanlama Veri Seti: movies.csv ve ratings.csv.md`
+- Açıklama dokümanı: `dersler/doğrusal-istatistik-modeller/resources/2- Film Puanlama Veri Seti: movies.csv ve ratings.csv.md`
 - Hedef değişken: `rating`
 
 Bu senaryoda model, `ratings.csv` içindeki alanlardan türetilen sayısal özelliklerle puan (`rating`) tahmin eder.
@@ -65,7 +65,7 @@ from sklearn.metrics import r2_score, mean_squared_error, mean_absolute_error
 ```python
 # Veri setini CSV dosyasından DataFrame olarak yükler.
 df = pd.read_csv(
-    "courses/linear-statistical-models/resources/movie-rating-ds/ratings.csv"
+    "dersler/doğrusal-istatistik-modeller/resources/movie-rating-ds/ratings.csv"
 )
 
 # Satır-sütun bilgisi ve ilk kayıtlar ile hızlı kontrol yapılır.

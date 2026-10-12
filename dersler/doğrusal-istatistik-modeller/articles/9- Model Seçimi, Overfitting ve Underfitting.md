@@ -7,7 +7,7 @@ Bu makalede film puanlama veri seti üzerinden overfitting ve underfitting riskl
 
 ## Veri seti: Movie Ratings (Birleştirilmiş)
 
-- Veri klasörü: `courses/linear-statistical-models/resources/movie-rating-ds/`
+- Veri klasörü: `dersler/doğrusal-istatistik-modeller/resources/movie-rating-ds/`
 - Dosya: `movie_ratings_merged.csv`
 - Kaynak: `ratings.csv` ve `movies.csv` dosyalarının `movieId` üzerinden birleştirilmiş hali
 - Hedef değişken: `rating`
@@ -99,7 +99,7 @@ from sklearn.pipeline import Pipeline
 ```python
 # Birleştirilmiş film puanlama verisini yükler.
 df = pd.read_csv(
-    "courses/linear-statistical-models/resources/movie-rating-ds/movie_ratings_merged.csv"
+    "dersler/doğrusal-istatistik-modeller/resources/movie-rating-ds/movie_ratings_merged.csv"
 )
 ```
 

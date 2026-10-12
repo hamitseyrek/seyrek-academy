@@ -8,7 +8,7 @@ Bu makalede üç aday model karşılaştırılır.
 
 **Student Performance** veri seti, öğrencilerin dönem sonu notunu (`final_exam_score`) çalışma alışkanlıklarıyla ilişkilendirmek için kullanılır.
 
-- Dosya: `courses/linear-statistical-models/resources/student_performance.csv`
+- Dosya: `dersler/doğrusal-istatistik-modeller/resources/student_performance.csv`
 - Hedef: `final_exam_score`
 - Bölme: %80 eğitim, %20 test (`random_state=42`)
 
@@ -36,7 +36,7 @@ from sklearn.linear_model import LinearRegression
 from sklearn.metrics import r2_score, mean_squared_error
 
 df = pd.read_csv(
-    "courses/linear-statistical-models/resources/student_performance.csv"
+    "dersler/doğrusal-istatistik-modeller/resources/student_performance.csv"
 )
 
 numeric_cols = [

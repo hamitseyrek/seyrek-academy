@@ -6,7 +6,7 @@ Bu makalede tek bir veri seti ve tek bir uçtan uca akış kullanılır. Fonksiy
 
 ## Veri seti: Student Performance
 
-- Dosya: `courses/linear-statistical-models/resources/student_performance.csv`
+- Dosya: `dersler/doğrusal-istatistik-modeller/resources/student_performance.csv`
 - Hedef değişken (`y`): `final_exam_score` — dönem sonu notu
 - Açıklayıcı değişkenler (`X`): öğrenci alışkanlık ve performans sütunları
 
@@ -49,7 +49,7 @@ from sklearn.metrics import r2_score, mean_squared_error
 
 # 1) Veriyi yükle
 df = pd.read_csv(
-    "courses/linear-statistical-models/resources/student_performance.csv"
+    "dersler/doğrusal-istatistik-modeller/resources/student_performance.csv"
 )
 
 # 2) Sayısal sütunlardaki eksikleri medyan ile doldur

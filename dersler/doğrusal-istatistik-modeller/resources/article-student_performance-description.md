@@ -7,7 +7,7 @@ Dosya, `6- Basit Doğrusal Regresyon ile Tahmin` ve `7- Çoklu Doğrusal Regresy
 ## Dosya Bilgileri
 
 - Dosya adı: `student_performance.csv`
-- Konum: `courses/linear-statistical-models/resources/`
+- Konum: `dersler/doğrusal-istatistik-modeller/resources/`
 - Biçim: CSV
 - Satır sayısı: 2000 veri satırı (+ 1 başlık satırı)
 - Eksik değer: Gerçek veri akışına benzemesi için bazı hücreler bilinçli olarak boş bırakılmıştır (CSV’de boş alan). Makale örneklerinde eksik değer sayımı ve doldurma/alt küme seçimi gösterilir.
@@ -42,7 +42,7 @@ Bu yapı sayesinde hem tek tek değişken etkileri hem de çoklu doğrusal regre
 ```python
 import pandas as pd
 
-df = pd.read_csv("courses/linear-statistical-models/resources/student_performance.csv")
+df = pd.read_csv("dersler/doğrusal-istatistik-modeller/resources/student_performance.csv")
 print(df.head())
 print(df.info())
 print(df.describe())

@@ -77,7 +77,7 @@ Doğrusal regresyon, hedef değişkeni bağımsız değişkenlerin doğrusal bir
 
 Çoklu modelde katsayı yorumu: **diğer değişkenler sabitken** ilgili değişken bir birim artınca `Y` ortalama ne kadar değişir.
 
-**Student Performance** veri seti (makale 6–7, 10–12): `courses/linear-statistical-models/resources/student_performance.csv`, hedef `final_exam_score`.
+**Student Performance** veri seti (makale 6–7, 10–12): `dersler/doğrusal-istatistik-modeller/resources/student_performance.csv`, hedef `final_exam_score`.
 
 Minimum akış (makale 10): veriyi yükle → eksikleri doldur → `features` seç → `train_test_split` → `LinearRegression().fit` → test `R2` / `RMSE`.
 

@@ -6,7 +6,7 @@ Bu makalede AIC/BIC için formül ezberlenmez; aşağıdaki Python kodu çalış
 
 ## Veri ve bağlam
 
-- Dosya: `courses/linear-statistical-models/resources/student_performance.csv`
+- Dosya: `dersler/doğrusal-istatistik-modeller/resources/student_performance.csv`
 - Hedef: `final_exam_score`
 - Eğitim–test: %80 / %20, `random_state=42`
 
@@ -46,7 +46,7 @@ from sklearn.linear_model import LinearRegression
 from sklearn.metrics import r2_score
 
 df = pd.read_csv(
-    "courses/linear-statistical-models/resources/student_performance.csv"
+    "dersler/doğrusal-istatistik-modeller/resources/student_performance.csv"
 )
 
 numeric_cols = [

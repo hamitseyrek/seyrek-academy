@@ -6,7 +6,7 @@ Dosyalar, `8- Model Uyumu ve Değerlendirme`, `9- Model Seçimi ve Overfitting` 
 
 ## Dosya Bilgileri
 
-- Veri klasörü: `courses/linear-statistical-models/resources/movie-rating-ds/`
+- Veri klasörü: `dersler/doğrusal-istatistik-modeller/resources/movie-rating-ds/`
 - Dosyalar: `movies.csv`, `ratings.csv`
 - Biçim: CSV
 - Satır sayısı:
@@ -65,10 +65,10 @@ Bu yapı sayesinde hem kullanıcı-film etkileşimleri hem de film meta verisi b
 import pandas as pd
 
 movies = pd.read_csv(
-    "courses/linear-statistical-models/resources/movie-rating-ds/movies.csv"
+    "dersler/doğrusal-istatistik-modeller/resources/movie-rating-ds/movies.csv"
 )
 ratings = pd.read_csv(
-    "courses/linear-statistical-models/resources/movie-rating-ds/ratings.csv"
+    "dersler/doğrusal-istatistik-modeller/resources/movie-rating-ds/ratings.csv"
 )
 
 df = ratings.merge(movies, on="movieId", how="inner")

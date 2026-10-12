@@ -8,8 +8,8 @@ Bu makalede hedef, öğrencilerin dönem sonu notu olan `final_exam_score` değe
 
 - Veri seti adı: **Student Performance**
 - Dosya: `student_performance.csv`
-- Konum: `courses/linear-statistical-models/resources/student_performance.csv`
-- Sütunların tam açıklaması: `courses/linear-statistical-models/resources/article-student_performance-description.md`
+- Konum: `dersler/doğrusal-istatistik-modeller/resources/student_performance.csv`
+- Sütunların tam açıklaması: `dersler/doğrusal-istatistik-modeller/resources/article-student_performance-description.md`
 
 ## Problem bağlamı
 
@@ -72,7 +72,7 @@ Temel yorum kuralı:
 import pandas as pd
 
 df = pd.read_csv(
-    "courses/linear-statistical-models/resources/student_performance.csv"
+    "dersler/doğrusal-istatistik-modeller/resources/student_performance.csv"
 )
 
 print(df.head())

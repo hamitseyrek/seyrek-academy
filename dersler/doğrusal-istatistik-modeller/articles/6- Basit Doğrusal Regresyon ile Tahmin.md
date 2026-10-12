@@ -8,8 +8,8 @@ Bu makalede, tek değişkenli model mantığını **Student Performance** veri s
 
 - Veri seti adı: **Student Performance**
 - Dosya: `student_performance.csv`
-- Konum: `courses/linear-statistical-models/resources/student_performance.csv`
-- Sütunların tam açıklaması: `courses/linear-statistical-models/resources/article-student_performance-description.md`
+- Konum: `dersler/doğrusal-istatistik-modeller/resources/student_performance.csv`
+- Sütunların tam açıklaması: `dersler/doğrusal-istatistik-modeller/resources/article-student_performance-description.md`
 
 ## Veri kümesi diyagramı
 
@@ -82,7 +82,7 @@ import pandas as pd
 import numpy as np
 
 df = pd.read_csv(
-    "courses/linear-statistical-models/resources/student_performance.csv"
+    "dersler/doğrusal-istatistik-modeller/resources/student_performance.csv"
 )
 print(df.head(3))
 print(df.info())
