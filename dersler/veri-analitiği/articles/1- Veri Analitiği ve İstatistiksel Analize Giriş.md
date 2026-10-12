@@ -1,27 +1,27 @@
 # Veri Analitiği ve İstatistiksel Analize Giriş
 
-Yazılım her tıklamayı, sensör her ölçümü, araç her konumu kaydedebilir. Kayıt arttıkça depolama büyür; ancak bu büyüme tek başına daha iyi bir karar üretmez. Veri analitiği, ham kaydın hangi soruya cevap vereceğini ve bu cevabın hangi eyleme bağlanacağını belirleme işidir. İstatistiksel analiz de aynı hattın devamında, cevabın rastlantıdan ayrılıp ayrılmadığını sınar.
+Yazılım her tıklamayı, sensör her ölçümü, araç her konumu kaydedebilir. Kayıt arttıkça depolama büyür; ancak bu büyüme tek başına daha iyi karar getirmez. Veri analitiği, ham kaydın hangi soruya cevap vereceğini ve bu cevabın hangi eyleme bağlanacağını belirleme işidir. İstatistiksel analiz de aynı hattın devamında, cevabın rastlantıdan ayrılıp ayrılmadığını sınar.
 
 ## Ham kayıt neden tek başına yetmez
 
 **Veri**, bir olaya veya ölçüme ait, henüz yorumlanmamış kayıttır. Bağlam eklenmeden okunduğunda çoğu zaman tek başına karar için yeterli olmaz.
 
-Örneği netleştirmek için aşağıdaki tablo, kurmaca bir teslimat aracının iki anlık konum kaydını gösterir:
+Somut örnek için aşağıdaki tablo, kurmaca bir teslimat aracının iki anlık konum kaydını gösterir:
 
 | record_id | recorded_at | latitude | longitude |
 |----------:|-------------|---------:|----------:|
 | 1 | 08:12:00 | 41.0100 | 29.0000 |
 | 2 | 08:12:30 | 41.0205 | 29.0000 |
 
-Bu tablo ne bir uyarı ne bir hız ihlali ne de bir rota önerisidir; yalnızca iki anda nerede olunduğunu söyler. Satırlar bu halde bırakılırsa diskte durur: sistem ne sürücüye sesli uyarı gönderir ne de bir sonraki turda hız sınırını değiştirir.
+Bu tablo ne bir uyarı ne bir hız ihlali ne de bir rota önerisidir; yalnızca iki anda aracın nerede olduğunu söyler. Satırlar bu halde bırakılırsa diskte kalır: sistem ne sürücüye sesli uyarı gönderir ne de bir sonraki turda hız sınırını değiştirir.
 
 İşlenmemiş veri, gürültü demek değildir. Gürültü, ölçümün içindeki istenmeyen sapmadır; ham veri ise henüz bir soruya bağlanmamış kayıttır. Kayıtların bir kısmı daha sonra hatalı veya eksik çıkabilir; bu ayıklama, analize hazırlık adımında yapılır.
 
 ## Aynı kayıttan dört anlam çıkar
 
-Aynı iki satır, üst üste dört farklı anlama dönüşebilir. Klasik adlandırmada bu sıra DIKW diye bilinir: data, information, knowledge, wisdom. Bu yazıdaki karşılıkları veri, enformasyon, içgörü ve karardır.
+Aynı iki satır, sırayla dört farklı anlama dönüşebilir. Klasik adlandırmada bu sıra DIKW diye bilinir: data, information, knowledge, wisdom. Bu yazıdaki karşılıkları veri, enformasyon, içgörü ve karardır.
 
-**Enformasyon**, verinin düzenlenip anlam taşıyacak biçimde okunmasıdır. Bu enlemde bir derece yaklaşık 111 kilometredir. İki satır arasındaki 0,0105 derecelik fark yaklaşık 1,17 kilometre eder. Otuz saniye, saatin 120'de biridir; 1,17 kilometre bu payla çarpılınca hız yaklaşık 140 km/sa bulunur. Böylece "Hız yaklaşık 140 km/sa" cümlesi artık ham koordinat değil, enformasyondur.
+**Enformasyon**, verinin düzenlenip anlam taşıyacak biçimde okunmasıdır. Bu enlemde bir derece yaklaşık 111 kilometreye karşılık gelir. İki satır arasındaki 0,0105 derecelik fark yaklaşık 1,17 kilometre eder. Otuz saniye, saatin 120'de biridir; 1,17 kilometre bu payla çarpılınca hız yaklaşık 140 km/sa bulunur. Böylece "Hız yaklaşık 140 km/sa" cümlesi artık ham koordinat değil, enformasyondur.
 
 **İçgörü**, enformasyonun bağlamla birleşmesidir. Bu kesitte yasal hız sınırı 90 km/sa ise araç sınırın üzerindedir. Sınır bilinmeden 140 km/sa tek başına ihlal sayılmaz; bir yolda olağan, başka bir yolda tehlike olabilir. **Alan bilgisi** (domain knowledge), verinin üretildiği işin kurallarını ve fiziksel karşılığını bilmektir. Hesap "yüksek" demez; yüksekliği bağlam söyler.
 
@@ -42,7 +42,7 @@ flowchart LR
     D --> E[Eylem]
 ```
 
-*Şekil 1: Ham konum kaydı, hız hesabı ve yol kuralıyla birleşerek uyarı veya hız sınırı gibi bir eyleme dönüşür.*
+*Şekil 1: Ham konum kaydı, hız hesabı ve yol kuralı birleşince uyarı veya hız sınırı gibi bir eyleme dönüşür.*
 
 ## Değer, yaşam döngüsünde üretilir
 
@@ -60,7 +60,7 @@ flowchart LR
 
 *Şekil 2: Kayıt üretimden karara ilerler; kararın sonucu yeni veri üreterek döngüyü sürdürür.*
 
-Döngüyü adım adım okumak, sonraki bölümlerde karşılaşılacak terimlerin iskeletini kurar:
+Döngüyü adım adım okumak, sonraki bölümlerde geçecek terimleri tanıtır:
 
 **Üretim**, kaydın ortaya çıktığı andır: sensör ölçer, uygulama bir olayı yazar, bir işlem veritabanına satır ekler.
 
@@ -68,7 +68,7 @@ Döngüyü adım adım okumak, sonraki bölümlerde karşılaşılacak terimleri
 
 **Saklama**, kayıtların kaybolmadan durduğu yerdir.
 
-**Hazırlama**, eksik, hatalı veya birbirine uymayan değerlerin analize girecek biçime çekilmesidir.
+**Hazırlama**, eksik, hatalı veya birbirine uymayan değerlerin analiz için uygun biçime getirilmesidir.
 
 **Analiz**, özetin, ilişkinin veya olası sonucun çıkarıldığı adımdır.
 
@@ -76,13 +76,13 @@ Döngüyü adım adım okumak, sonraki bölümlerde karşılaşılacak terimleri
 
 Her halka ayrı bir iştir. Toplama yöntemleri, hazırlama adımları ve analiz türleri serinin ilerleyen yazılarında ayrıntılandırılır.
 
-## Analitik üç alanın kesişiminde durur
+## Veri analitiği üç alana dayanır
 
-Veri analitiği, veriyi sorulara cevap verecek biçimde incelemek ve bu cevapları karara bağlamaktır. Üç alan birlikte durmadığında sonuç ya hesaplanamaz ya da yanlış bağlama uygulanır.
+Veri analitiği, veriyi sorulara cevap verecek biçimde incelemek ve bu cevapları karara bağlamaktır. Üç alandan biri eksik kaldığında sonuç ya hesaplanamaz ya da yanlış bağlama uygulanır.
 
 **Bilgisayar bilimi** kaydı toplar, saklar ve işler. Konum satırları bir tabloda durmuyorsa hız da hesaplanamaz.
 
-**İstatistik**, dağılımı, değişkenliği ve "bu sonuç rastlantı olabilir mi?" sorusunu ele alır. Tek bir 140 km/sa değeri tek bir olayı anlatır; bir araç grubunun bu aşımı sistemli yapıp yapmadığı ancak birçok kayıtla anlaşılır.
+**İstatistik**, dağılımı, değişkenliği ve "bu sonuç rastlantı olabilir mi?" sorusunu yanıtlar. Tek bir 140 km/sa değeri tek bir olayı anlatır; bir araç grubunun bu aşımı sistemli yapıp yapmadığı ancak birçok kayıtla anlaşılır.
 
 **Alan bilgisi**, sayının yazılımda, işletmede veya fiziksel sistemde ne anlama geldiğini bilir. Hız sınırını, aracın görevini ve uyarının sürücüyü nasıl etkileyeceğini hesap tek başına söylemez.
 
@@ -99,29 +99,29 @@ Veri analitiği, veriyi sorulara cevap verecek biçimde incelemek ve bu cevaplar
 | Tahminsel (predictive) | Ne olabilir? | Yarın sabah bu rampada aşım olasılığı yüksek görünüyor. |
 | Yönlendirici (prescriptive) | Ne yapılmalı? | Yağmurlu günlerde bu rampanın hız üst sınırı düşürülsün. |
 
-Betimsel sonuç bir sayıdır. Tanısal sonuç bir açıklama adayıdır; adayın veriye dayanıp dayanmadığı ayrıca yoklanır. Tahminsel sonuç henüz olmamış bir durumu söyler ve yanılabilir. Yönlendirici sonuç bir eylem önerir; öneri tahmini ve alan kuralını birlikte kullanır. "Olasılık yüksek" cümlesi tek başına hız sınırını değiştirmez; sınırı değiştirmek ayrı bir karardır.
+Betimsel sonuç bir sayıdır. Tanısal sonuç bir açıklama adayıdır; adayın veriye dayanıp dayanmadığı ayrıca sınanır. Tahminsel sonuç henüz olmamış bir durumu söyler ve yanılabilir. Yönlendirici sonuç bir eylem önerir; öneri tahmini ve alan kuralını birlikte kullanır. "Olasılık yüksek" cümlesi tek başına hız sınırını değiştirmez; sınırı değiştirmek ayrı bir karardır.
 
-Betimsel ve tanısal analitik kaydı enformasyona ve içgörüye taşır. Tahminsel ve yönlendirici analitik, içgörüyü henüz olmamış duruma ve eyleme bağlar.
+Betimsel ve tanısal analitik, ham kaydı enformasyona ve içgörüye dönüştürür. Tahminsel ve yönlendirici analitik, içgörüyü henüz gerçekleşmemiş duruma ve eyleme bağlar.
 
 ## Bilişim sistemlerinde veri hangi biçimde gelir
 
-Karar döngüsüne giren kayıtlar tek biçimde durmaz. Biçim, hangi işlemin anlamlı olacağını önceden haber verir.
+Karar döngüsüne giren kayıtlar tek biçimde durmaz. Biçim, hangi işlemlerin mantıklı olacağını önceden gösterir.
 
 | Biçim | Ne taşır | Örnek |
 | --- | --- | --- |
 | İşlem kaydı | Aynı alanların tekrarlandığı satırlar | Sipariş, konum, stok hareketi |
 | Olay günlüğü (log) | Zamanı belli olaylar | Uygulama hatası, kapı açılması |
 | Sensör ölçümü | Aralıklarla gelen sayılar | Hız, sıcaklık, ivme |
-| Metin, görüntü ve ses | Tablo hücresine doğrudan sığmayan içerik | Kullanıcı yorumu, kamera karesi |
+| Metin, görüntü ve ses | Tek bir tablo hücresine sığmayan içerik | Kullanıcı yorumu, kamera karesi |
 
-**Log**, bir sistemin zaman sırasıyla tuttuğu olay kaydıdır. İşlem kaydı ve log çoğu zaman tabloya yakındır. Metin, görüntü ve ses ise önce bir ölçüme veya etikete çevrilmeden ortalama, hız veya karşılaştırma hesabına girmez. Bu biçimlerin nasıl toplanıp hazırlanacağı, döngünün toplama ve hazırlama halkalarında ele alınır.
+**Log**, bir sistemin zaman sırasıyla tuttuğu olay kaydıdır. İşlem kaydı ve log çoğu zaman tabloya yakındır. Metin, görüntü ve ses ise önce bir ölçüme veya etikete çevrilmeden ortalama, hız veya karşılaştırma hesabına dahil edilemez. Bu biçimlerin nasıl toplanıp hazırlanacağı, döngünün toplama ve hazırlama halkalarında anlatılır.
 
 ## Yazılım, mühendislik ve otonom sistemde aynı çerçeve
 
-Teslimat aracı örneğinde kurulan çerçeve, kaynağa göre değişmez; değişen yalnızca kaydın nereden geldiği ve eylemin kime veya neye gittiğidir.
+Teslimat aracı örneğinde kullandığımız çerçeve, kaynağa göre değişmez; değişen yalnızca kaydın nereden geldiği ve eylemin kime veya neye gittiğidir.
 
 Bir mobil uygulamada veri, oturum ve hata kayıtlarıdır. Betimsel soru, son sürümde çökme sayısının ne olduğudur. Yönlendirici karşılığı, çökmeler tek bir ekranda toplanıyorsa o sürümü kademeli açmak veya durdurmaktır.
 
 Bir mühendislik ölçümünde veri, hattın veya tezgâhın sensöründen gelir. Ortalama sıcaklık normal görünüp kısa süreli sıçramalar malzemeyi bozuyorsa, tek başına ortalama kararı yanıltır. Sapmanın ayırt edilmesi, ölçümün nasıl özetleneceği ve kaydın nasıl hazırlanacağı ile ilgilidir.
 
-Bir otonom veya yarı otonom araçta veri, konum ve hız gibi ölçümlerdir. Karar, kayıt bir merkeze vardıktan sonra da verilebilir; ölçümün alındığı cihazda da verilebilir. Sıra iki durumda da aynıdır: ölçüm hıza, hız yol kuralıyla birlikte bir içgörüye, içgörü gaz veya uyarı gibi bir eyleme bağlanır. Eylemin sonucu yeni ölçüm üretir ve döngü kapanır.
+Bir otonom veya yarı otonom araçta veri, konum ve hız gibi ölçümlerdir. Karar, kayıt merkeze vardıktan sonra da verilebilir; ölçümün alındığı cihazda da verilebilir. İki durumda da sıra aynıdır: ölçüm önce hıza, hız yol kuralıyla birleşince içgörüye, içgörü de gaz veya uyarı gibi bir eyleme bağlanır. Eylemin sonucu yeni ölçüm üretir ve döngü kapanır.
