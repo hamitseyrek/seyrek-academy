@@ -1,3 +1,10 @@
 # Untracked answer key / solutions
 for-my-reference/*
 .cursor/*
+
+# PDF render scratch (tools/pdf/README.md)
+tools/pdf/output/*
+!tools/pdf/output/.gitkeep
+
+# Local scratch (use tools/pdf instead)
+.tmp/
