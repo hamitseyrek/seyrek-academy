@@ -1,7 +1,3 @@
-Harika, şimdi tam oturdu! İkinci makalenin girişine o güçlü vurguyu ve "Bu yazıda neler var?" vizyonunu yedirerek, 1. başlıktan itibaren tüm makalenin güncellenmiş ve eksiksiz hâlini aşağıda paylaşıyorum:
-
----
-
 # Dart Programlama Dili Temelleri: Değişkenler, Koleksiyonlar ve Null Safety
 
 **Tek kod tabanıyla mobil uygulama yazmak istiyorsanız, önce Dart’ı iyi kavramak işinizi inanılmaz derecede kolaylaştırır.**
@@ -21,7 +17,9 @@ Bu yazıda, Dart’ın temelini oluşturan **değişkenler, sabitler, akış kon
 
 ---
 
-## 1. Çalışma Ortamı: VS Code ile Dart Dosyası Çalıştırma
+1. ## Çalışma Ortamı: VS Code ile Dart Dosyası Çalıştırma
+
+
 
 Tarayıcı tabanlı araçlar yerine doğrudan terminal ve editörle çalışmak en temiz yoldur.
 
@@ -33,6 +31,7 @@ Tarayıcı tabanlı araçlar yerine doğrudan terminal ve editörle çalışmak 
 ```bash
 dart run main.dart
 
+
 ```
 
 Dart'ta her uygulamanın başlangıç noktası `main()` fonksiyonudur:
@@ -41,6 +40,7 @@ Dart'ta her uygulamanın başlangıç noktası `main()` fonksiyonudur:
 void main() {
   print('Dart ortamı hazır.');
 }
+
 
 ```
 
@@ -77,6 +77,7 @@ void main() {
   print('Yazar adı uzunluğu: ${author.length} karakter');
 }
 
+
 ```
 
 ### `final` ve `const` Farkı
@@ -97,6 +98,7 @@ void main() {
   print('PI: $pi');
   print('Oturum Açma Saati: $loginTime');
 }
+
 
 ```
 
@@ -124,6 +126,7 @@ void main() {
   print('Rozet Rengi: $badgeColor');
 }
 
+
 ```
 
 ### `switch - case`
@@ -146,6 +149,35 @@ void main() {
       break;
     default:
       print('Bilinmeyen durum.');
+  }
+}
+
+
+```
+
+### Döngüler: `for`, `for-in` ve `while`
+
+Veri listelerini tek tek işlemek veya belirli bir işlemi tekrar ettirmek için döngüler kullanılır:
+
+```dart
+void main() {
+  // 1. Standart Sayaçlı 'for' Döngüsü
+  for (int i = 1; i <= 3; i++) {
+    print('Sayaç: $i');
+  }
+
+  // 2. Koleksiyonlar İçin 'for-in' Döngüsü (En Sık Kullanılan Yöntem)
+  List<String> tags = ['Mobil', 'Flutter', 'Yazılım'];
+  print('--- for-in ile Etiketler ---');
+  for (String tag in tags) {
+    print('#$tag');
+  }
+
+  // 3. 'while' Döngüsü
+  int retry = 0;
+  while (retry < 2) {
+    print('Yeniden deneniyor: $retry');
+    retry++;
   }
 }
 
@@ -181,6 +213,7 @@ void main() {
   }
 }
 
+
 ```
 
 ### Map (Anahtar - Değer Eşleşmesi)
@@ -206,6 +239,7 @@ void main() {
 
   print('Güncel Not Haritası: $note');
 }
+
 
 ```
 
@@ -234,6 +268,7 @@ void main() {
   print('Açıklama: $description');
 }
 
+
 ```
 
 ### Güvenli Erişim (`?.`) ve Null-Coalescing (`??`) Operatörleri
@@ -256,6 +291,7 @@ void main() {
   userNote = 'Önemli Hatırlatma';
   print(userNote!.toUpperCase());
 }
+
 
 ```
 
@@ -308,6 +344,7 @@ void main() {
   }
 }
 
+
 ```
 
 ### Çıktı
@@ -323,6 +360,7 @@ Terminalde `dart run main.dart` komutunu çalıştırdığınızda şu çıktıy
 === YÜKSEK ÖNCELİKLİ VE TAMAMLANMAMIŞ NOTLAR ===
 -> Dikkat: Haftalık Plan henüz tamamlanmadı!
 -> Dikkat: Flutter Projesini Başlat henüz tamamlanmadı!
+
 
 ```
 
