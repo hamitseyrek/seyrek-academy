@@ -1,6 +1,7 @@
 # Untracked answer key / solutions
 for-my-reference/*
 dersler/mobil-programlama-flutter/old/*
+dersler/mesleki-ingilizce/*
 .cursor/*
 
 # PDF render scratch (tools/pdf/README.md)
@@ -9,3 +10,4 @@ tools/pdf/output/*
 
 # Local scratch (use tools/pdf instead)
 .tmp/
+AGENTS.md
