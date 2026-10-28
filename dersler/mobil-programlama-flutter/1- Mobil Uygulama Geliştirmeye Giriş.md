@@ -205,7 +205,7 @@ flowchart TB
 
 *Şekil 7: Geliştirme ortamının hazırlanma sırası.*
 
-1. **Flutter SDK:** Dart derleyicisini, temel widget kütüphanelerini ve komut satırı araçlarını içeren çekirdek pakettir. İşletim sistemine uygun kurulum [Flutter Resmî Dokümantasyonu](https://docs.flutter.dev/get-started/install) üzerinden gerçekleştirilir.
+1. **Flutter SDK:** Dart derleyicisini, temel widget kütüphanelerini ve komut satırı araçlarını içeren çekirdek pakettir. İşletim sistemine uygun kurulum [Flutter Resmî Dokümantasyonu](https://docs.flutter.dev/get-started/install) üzerinden gerçekleştirilir. Ayrıntılı adım adım kurulum, ortam değişkenleri (PATH) ve olası hataların çözümü için [Geliştirme Ortamı Kurulum Rehberi](<Geliştirme Ortamı Kurulum Rehberi.md>) dokümanını inceleyebilirsiniz.
 2. **Sistem Doğrulaması (`flutter doctor`):** Kurulum sonrasında terminale yazılacak şu komut, sistemin geliştirme hazırlığını denetler:
 ```bash
 flutter doctor
