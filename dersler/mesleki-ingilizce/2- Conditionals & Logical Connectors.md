@@ -206,7 +206,7 @@ Karışık sırada verilen kelimeleri kurallı bir teknik İngilizce şart cüml
 
 ### S3: Türkçeden İngilizceye Teknik Çeviri
 
-Aşağıdaki mühendislik karar ifadelerini `if`, `unless` veya `otherwise` kullanarak İngilizceye çeviriniz:
+Aşağıdaki teknik karar ifadelerini `if`, `unless` veya `otherwise` kullanarak İngilizceye çeviriniz:
 
 1. Eğer mesafe 15 santimetreden küçükse, sistem motorları durdurur.
 2. Butona basılmadıkça robot hareket etmez. *(hareket etmek: move, basılmak: be pressed)*

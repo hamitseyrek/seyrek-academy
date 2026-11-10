@@ -202,7 +202,7 @@ Açık kaynak bir projenin kurulum adımları:
 
 ## 5. Teknik Metin Okuma Stratejisi: Tarama Yöntemi (Skimming & Scanning)
 
-Teknik metinleri okurken sözlük kullanarak her kelimeyi Türkçeleştirmeye çalışmak süreci yavaşlatır. Mühendislik pratiğinde iki aşamalı okuma yöntemi uygulanır:
+Teknik metinleri okurken sözlük kullanarak her kelimeyi Türkçeleştirmeye çalışmak süreci yavaşlatır. Teknik alanlarda iki aşamalı okuma yöntemi uygulanır:
 
 1. **Skimming (Göz Gezdirme - Ana Fikri Çıkarma):**
    * Metnin tamamı okunmaz.
