@@ -37,77 +37,81 @@ Tek sorumluluk ilkesi, "her sınıf yalnızca tek bir metot içermelidir" anlam�
 
 Bir sınıf hem iş kurallarını hesaplıyor, hem veriyi JSON formatına dönüştürüyor, hem veritabanına kayıt yazıyor hem de kullanıcıya e-posta gönderiyorsa; veritabanı yapısı değiştiğinde de, vergi oranı değiştiğinde de, e-posta şablonu değiştiğinde de aynı sınıf açılıp düzenlenmek zorunda kalır.
 
-### İhlal Örneği: Her İşi Üstlenen Sınıf
+### İhlal Örneği: Her İşi Üstlenen Sınıf (God Object)
 
-Aşağıdaki `InvoiceProcessor` sınıfı fatura hesaplama, dosya kaydetme ve bildirim gönderme sorumluluklarını tek bir gövdede birleştirmektedir:
+Aşağıdaki `InvoiceManager` sınıfı fatura tutarı hesaplama, veritabanına kaydetme ve müşteri e-postası gönderme sorumluluklarını tek bir gövdede birleştirmektedir:
 
 ```dart
-class Invoice {
-  final String id;
-  final String customerEmail;
-  final List<double> itemPrices;
+// ============================================================================
+// KÖTÜ TASARIM (SRP İhlali): Tek bir sınıf 3 farklı departmanın işini yapıyor!
+// ============================================================================
 
-  Invoice({
-    required this.id,
-    required this.customerEmail,
-    required this.itemPrices,
-  });
-}
-
-// KÖTÜ TASARIM: Üç farklı sorumluluk tek sınıfta toplanmış
-class InvoiceProcessor {
-  double calculateTotalWithTax(Invoice invoice) {
-    final subtotal = invoice.itemPrices.fold(0.0, (sum, item) => sum + item);
-    return subtotal * 1.20; // %20 KDV hesaplama (İş Kuralı)
+class InvoiceManager {
+  // 1. Sorumluluk: Muhasebe / Hesaplama kuralı (İş Mantığı)
+  // Finans departmanı KDV oranını veya indirim kuralını değiştirirse bu metot değişir.
+  double calculateTotalWithTax(double subtotal) {
+    final vat = subtotal * 0.20; // %20 KDV hesaplanıyor
+    return subtotal + vat;
   }
 
-  void saveToLocalFile(Invoice invoice, double total) {
-    // Dosya formatı veya depolama yöntemi değişirse bu sınıf değişir
-    final content = 'Fatura No: ${invoice.id}, Tutar: $total TL';
-    print('Disk üzerine kaydedildi: $content');
+  // 2. Sorumluluk: Veritabanı ve Depolama Yönetimi (Veri Katmanı)
+  // Veritabanı SQLite'tan Firebase'e geçerse veya tablo yapısı değişirse bu metot değişir.
+  void saveToDatabase(int invoiceId, double total) {
+    print('Fatura #$invoiceId veritabanına kaydedildi. Tutar: $total TL');
   }
 
-  void sendEmailNotification(Invoice invoice, double total) {
-    // E-posta sunucusu veya mesaj metni değişirse yine bu sınıf değişir
-    print('${invoice.customerEmail} adresine $total TL tutarlı fatura gönderildi.');
+  // 3. Sorumluluk: Dış Bildirim ve İletişim (İletişim Katmanı)
+  // Pazarlama departmanı e-posta şablonunu veya sunucuyu değiştirirse bu metot değişir.
+  void sendCustomerEmail(String email, double total) {
+    print('$email adresine $total TL tutarlı fatura e-postası gönderildi.');
   }
 }
 ```
 
-Bu tasarımda vergi hesaplama mantığını test etmek isteyen bir geliştirici bile dosya sistemi ve e-posta bağımlılıklarıyla uğraşmak zorunda kalır.
+**Neden Kötü Tasarım?**
+* **Üç Farklı Değişim Nedeni:** Muhasebe (vergi oranı), Veritabanı Yöneticisi (SQL şeması) ve Pazarlama (e-posta metni) aynı sınıfı değiştirmek zorundadır. Sınıf tek bir aktörün değil, şirketteki her departmanın ortak çatışma alanına dönüşür.
+* **Git Çakışmaları (Merge Conflict):** Farklı özellikler geliştiren ekip üyeleri sürekli aynı dosya üzerinde çalışmak zorunda kaldığı için kod çakışmaları kaçınılmaz hale gelir.
+* **Test İmkânsızlığı:** Yalnızca KDV hesaplama kuralını birim testine sokmak isteyen bir mühendis bile dosya sistemi ve e-posta modüllerini taklit (mock) etmek zorunda kalır.
 
-### Doğru Tasarım: Sorumlulukların Ayrıştırılması
+### Doğru Tasarım: Sorumlulukların Ayrıştırılması (High Cohesion)
 
 Her değişim nedeni kendi odaklanmış sınıfına taşınır ve bu sınıflar yüksek uyumlu (**high cohesion**) birimler haline getirilir:
 
 ```dart
-// 1. Sorumluluk: Yalnızca fatura tutarı ve vergi kurallarını hesaplar
+// ============================================================================
+// DOĞRU TASARIM (SRP Uygun): Her sınıf yalnızca TEK bir nedenden ötürü değişir.
+// ============================================================================
+
+// 1. Sorumluluk: Yalnızca muhasebe ve hesaplama mantığı (Domain Kuralı)
+// Yalnızca finansal formüller değişirse bu sınıf güncellenir.
 class InvoiceCalculator {
-  static const double _taxRate = 0.20;
-
-  double calculateTotal(Invoice invoice) {
-    final subtotal = invoice.itemPrices.fold(0.0, (sum, item) => sum + item);
-    return subtotal * (1 + _taxRate);
+  double calculateTotalWithTax(double subtotal) {
+    final vat = subtotal * 0.20; // %20 KDV ekleniyor
+    return subtotal + vat;
   }
 }
 
-// 2. Sorumluluk: Yalnızca faturanın kalıcı olarak saklanmasıyla ilgilenir
+// 2. Sorumluluk: Yalnızca veritabanı ve kalıcılık işlemleri (Veri Katmanı)
+// Yalnızca kayıt ortamı (SQLite, Firebase, REST API) değişirse bu sınıf güncellenir.
 class InvoiceRepository {
-  void save(Invoice invoice, double totalAmount) {
-    final record = 'Fatura No: ${invoice.id}, Tutar: $totalAmount TL';
-    print('Veri kaynağına kaydedildi: $record');
+  void save(int invoiceId, double total) {
+    print('Fatura #$invoiceId veritabanına kaydedildi. Tutar: $total TL');
   }
 }
 
-// 3. Sorumluluk: Yalnızca müşteri bildirimlerini yönetir
+// 3. Sorumluluk: Yalnızca dış dünya iletişimi ve bildirimler (İletişim Katmanı)
+// Yalnızca e-posta formatı veya SMS sağlayıcısı değişirse bu sınıf güncellenir.
 class InvoiceNotificationService {
-  void sendInvoiceEmail(Invoice invoice, double totalAmount) {
-    print('${invoice.customerEmail} adresine $totalAmount TL fatura özeti iletildi.');
+  void sendCustomerEmail(String email, double total) {
+    print('$email adresine $total TL tutarlı fatura e-postası gönderildi.');
   }
 }
 ```
 
-Artık vergi oranı değiştiğinde yalnızca `InvoiceCalculator`, bildirim metni değiştiğinde ise yalnızca `InvoiceNotificationService` güncellenir. Sınıflar birbirinden bağımsız olarak kolayca test edilebilir.
+**Neden Doğru Tasarım?**
+* **İzole Değişim:** KDV oranı değiştiğinde yalnızca `InvoiceCalculator` güncellenir; veritabanı veya e-posta kodlarına dokunulmaz.
+* **Kolay Test:** Hesaplama mantığı sahte nesnelere (mock) ihtiyaç duyulmadan saf birim testleriyle (Unit Test) anında test edilebilir.
+* **Yeniden Kullanılabilirlik:** Bildirim servisi yarın sipariş veya kargo bildirimleri için de aynen kullanılabilir.
 
 ---
 
@@ -122,69 +126,87 @@ Projeye her yeni özellik veya yeni bir tür eklendiğinde, halihazırda çalı�
 Bir e-ticaret uygulamasında farklı ödeme yöntemlerini işleyen aşağıdaki sınıfı inceleyelim:
 
 ```dart
-enum PaymentType { creditCard, bankTransfer, digitalWallet }
+// ============================================================================
+// KÖTÜ TASARIM (OCP İhlali): Yeni tür eklendikçe çalışan kod açılıp değiştiriliyor!
+// ============================================================================
 
-// KÖTÜ TASARIM: Yeni bir ödeme yöntemi (ör. Hediye Çeki) eklendiğinde
-// bu sınıfın kaynak kodu açılıp değiştirilmek zorundadır.
-class PaymentCheckoutService {
+enum PaymentType { creditCard, bankTransfer }
+
+class PaymentService {
   void processPayment(double amount, PaymentType type) {
+    // 1. Yöntem: Kredi kartı tahsilatı
     if (type == PaymentType.creditCard) {
-      print('Kredi kartından $amount TL çekildi. Komisyon: ${amount * 0.02} TL');
-    } else if (type == PaymentType.bankTransfer) {
-      print('Banka havalesi ile $amount TL onaylandı. Komisyon: 0 TL');
-    } else if (type == PaymentType.digitalWallet) {
-      print('Dijital cüzdandan $amount TL ödendi. Komisyon: ${amount * 0.01} TL');
-    } else {
-      throw UnsupportedError('Desteklenmeyen ödeme yöntemi.');
+      print('Kredi kartından $amount TL çekildi.');
+    } 
+    // 2. Yöntem: Havale tahsilatı
+    else if (type == PaymentType.bankTransfer) {
+      print('Banka havalesi ile $amount TL onaylandı.');
     }
+
+    // TEHLİKE: Yarın sisteme "Hediye Kartı", "Kripto" veya "Kapıda Ödeme" geldiğinde;
+    // aylardır sorunsuz çalışan bu sınıf mecburen açılacak, araya yeni "else if"
+    // eklenecek ve daha önce test edilip onaylanmış kodların bozulma riski doğacak!
   }
 }
 ```
 
-Sisteme "Kapıda Ödeme" veya "Kripto Ödeme" eklendiğinde `PaymentCheckoutService` sınıfı yeniden düzenlenmeli ve kredi kartı dahil tüm ödeme testleri baştan koşturulmalıdır.
+**Neden Kötü Tasarım?**
+* **Değişime Açık (Tehlikeli):** Sisteme yeni bir ödeme seçeneği geldiğinde mevcut çalışan kaynak kodu açıp değiştirmek zorunlu hale gelir.
+* **Regresyon Riski:** Halihazırda sorunsuz çalışan kredi kartı mantığının ortasına yeni kod eklenirken yanlışlıkla eski akış bozulabilir.
+* **Tekrar Eden Test Yükü:** Yalnızca tek bir yeni yöntem eklendiği halde tüm eski ödeme türlerinin baştan test edilmesi gerekir.
 
-### Doğru Tasarım: Soyut Sözleşme ile Genişletilebilirlik
+### Doğru Tasarım: Soyut Sözleşme ile Genişletilebilirlik (Polimorfizm)
 
-Değişen davranış bir arayüz (`abstract interface class`) arkasına alınır. Her yeni ödeme yöntemi mevcut kodu değiştirmeden yeni bir sınıf olarak sisteme eklenir:
+Değişen davranış bir arayüz (`abstract interface class`) arkasına alınır. Her yeni ödeme yöntemi mevcut koda tek bir satır dahi dokunmadan yeni bir sınıf dosyası olarak sisteme dahil edilir:
 
 ```dart
-// Ortak sözleşme
+// ============================================================================
+// DOĞRU TASARIM (OCP Uygun): Gelişime AÇIK, kaynak kod değişimine KAPALI mimari.
+// ============================================================================
+
+// 1. Adım: Tüm ödeme yöntemlerinin uyması gereken ortak sözleşme (Arayüz)
 abstract interface class PaymentMethod {
-  void pay(double amount);
+  void pay(double amount); // Her yöntem kendi tahsilatını kendisi yönetir
 }
 
+// 2. Adım: Kredi kartı sınıfı sözleşmeyi uygular
 class CreditCardPayment implements PaymentMethod {
   @override
   void pay(double amount) {
-    final fee = amount * 0.02;
-    print('Kredi kartından $amount TL çekildi (Komisyon: $fee TL).');
+    print('Kredi kartından $amount TL çekildi.');
   }
 }
 
+// 3. Adım: Banka havalesi sınıfı sözleşmeyi uygular
 class BankTransferPayment implements PaymentMethod {
   @override
   void pay(double amount) {
-    print('Banka havalesi ile $amount TL komisyonsuz onaylandı.');
+    print('Banka havalesi ile $amount TL onaylandı.');
   }
 }
 
-// Yeni eklenen yöntem: Mevcut hiçbir sınıfa dokunulmadan sisteme dahil edildi
+// 4. Adım: YENİ BİR ÖDEME TÜRÜ GELDİ! (Örn: Hediye Çeki)
+// Eski hiçbir koda DOKUNMADAN, yalnızca yeni bir sınıf ekleyerek sistemi büyütüyoruz:
 class GiftCardPayment implements PaymentMethod {
   @override
   void pay(double amount) {
-    print('Hediye çeki bakiyesinden $amount TL düşüldü.');
+    print('Hediye çeki bakiyesinden $amount TL tahsil edildi.');
   }
 }
 
-// Değişime kapalı, gelişime açık ana servis
-class CheckoutProcessor {
-  void checkout(double amount, PaymentMethod paymentMethod) {
-    paymentMethod.pay(amount);
+// 5. Adım: Ödemeyi başlatan ana servis (DEĞİŞİME TAMAMEN KAPALI)
+// Sisteme 100 farklı ödeme yöntemi eklense bile BU SINIF ASLA DEĞİŞMEZ!
+class CheckoutService {
+  void checkout(PaymentMethod paymentMethod, double amount) {
+    paymentMethod.pay(amount); // Polimorfizm: Tek satırlık çağrı her yönteme uyar
   }
 }
 ```
 
-`CheckoutProcessor` sınıfı artık ne kadar yeni ödeme yöntemi eklenirse eklensin tek satır bile değişmez.
+**Neden Doğru Tasarım?**
+* **Gelişime Açık:** Yeni bir ödeme türü eklemek için projeye sadece yeni bir sınıf dosyası eklemek yeterlidir.
+* **Değişime Kapalı:** `CheckoutService` sınıfının ve mevcut ödeme sınıflarının tek bir satırı dahi düzenlenmez.
+* **Sıfır Hata Riski:** Yeni özellik eklenirken eski çalışan kodlara dokunulmadığı için beklenmedik arıza (regresyon) riski tamamen ortadan kalkar.
 
 ---
 
@@ -196,95 +218,102 @@ Barbara Liskov tarafından tanımlanan bu ilke, kalıtımın (`extends`) ve söz
 
 ### İhlal Örneği: Sözleşmeyi Bozan Alt Sınıf
 
-Sistemdeki belgeleri yöneten bir yapıda tüm belgelerin hem okunabildiğini hem de düzenlenip kaydedilebildiğini varsayan hatalı bir hiyerarşi kuralım:
+Sistemdeki belgeleri yöneten bir yapıda tüm belgelerin hem okunabildiğini hem de kaydedilebildiğini varsayan hatalı bir hiyerarşi kuralım:
 
 ```dart
+// ============================================================================
+// KÖTÜ TASARIM (LSP İhlali): Alt sınıf, üst sınıfın verdiği sözü çiğniyor!
+// ============================================================================
+
+// Üst sınıf: Sistemdeki her belgenin okunabileceğini ve kaydedilebileceğini taahhüt eder.
 abstract class Document {
-  String readContent();
-  void saveContent(String newContent);
+  void read();
+  void save(); // "Tüm belgeler kaydedilebilir" sözü veriliyor
 }
 
-class EditableTextDocument extends Document {
-  String _content;
-  EditableTextDocument(this._content);
+// Word belgesi: Hem okunabilir hem kaydedilebilir (Sorunsuz türeyen sınıf)
+class WordDocument extends Document {
+  @override
+  void read() => print('Word belgesi okundu.');
 
   @override
-  String readContent() => _content;
-
-  @override
-  void saveContent(String newContent) {
-    _content = newContent;
-    print('Belge güncellendi: $_content');
-  }
+  void save() => print('Word belgesi disk üzerine kaydedildi.');
 }
 
-// KÖTÜ TASARIM: Salt okunur PDF belgesi Document sınıfından türetilmiş
-// ancak kaydetme davranışını desteklemediği için hata fırlatıyor.
+// KÖTÜ ALT SINIF: Salt okunur PDF belgesi üst sınıftan türüyor
+// fakat doğası gereği kaydedilemediği için metotta hata fırlatıyor!
 class ReadOnlyPdfDocument extends Document {
-  final String _content;
-  ReadOnlyPdfDocument(this._content);
+  @override
+  void read() => print('PDF belgesi okundu.');
 
   @override
-  String readContent() => _content;
-
-  @override
-  void saveContent(String newContent) {
-    throw UnsupportedError('Salt okunur PDF belgeleri değiştirilemez!');
+  void save() {
+    // İHLAL: Üst sınıfın vaadi yerine getirilmiyor!
+    // Çağrıldığı anda çalışma zamanında (runtime) uygulama beklenmedik şekilde çöker!
+    throw UnsupportedError('HATA: Salt okunur PDF belgeleri kaydedilemez!');
   }
 }
 
-void autoSaveAllDocuments(List<Document> documents) {
+// Belgeleri topluca kaydeden fonksiyon:
+void saveAllDocuments(List<Document> documents) {
   for (final doc in documents) {
-    // Liste içinde ReadOnlyPdfDocument varsa uygulama çalışma zamanında çöker!
-    doc.saveContent('Otomatik yedek içeriği');
+    doc.save(); // Listede ReadOnlyPdfDocument varsa PROGRAM ÇALIŞMA ZAMANINDA ÇÖKER!
   }
 }
 ```
 
-`autoSaveAllDocuments` fonksiyonu `Document` sözleşmesine güvenerek `saveContent` metodunu çağırmaktadır; ancak `ReadOnlyPdfDocument` alt sınıfı üst sınıfın verdiği sözü tutmayarak sistemi çökertmektedir.
+**Neden Kötü Tasarım?**
+* **Yalancı Kalıtım:** Alt sınıf, üst sınıfın sunduğu temel davranışı yerine getiremeyip çalışma zamanında istisna (`UnsupportedError`) fırlatmaktadır.
+* **Çalışma Zamanı Çökmesi:** Derleyici hiçbir sözdizimi hatası vermez; facia canlıda bir müşteri PDF belgesini kaydetmeye çalıştığında patlak verir.
+* **Kırılgan Güven:** `saveAllDocuments` fonksiyonunu yazan mühendis, parametre olarak gelen nesnelere güvenemez ve her nesne için tip kontrolü (`if (doc is! ReadOnlyPdfDocument)`) yapmak zorunda kalır.
 
 ### Doğru Tasarım: Davranış Yeteneklerine Göre Doğru Hiyerarşi
 
 Okuma ve yazma yetenekleri birbirinden ayrılarak her alt sınıfın yalnızca gerçekten yerine getirebildiği sözleşmeyi üstlenmesi sağlanır:
 
 ```dart
+// ============================================================================
+// DOĞRU TASARIM (LSP Uygun): Yeteneklere göre ayrılmış güvenilir sözleşmeler.
+// ============================================================================
+
+// 1. Sözleşme: Yalnızca okuma yeteneği olan belgeler
 abstract interface class ReadableDocument {
-  String readContent();
+  void read(); // Sadece okuma garantisi verilir
 }
 
+// 2. Sözleşme: Hem okuma hem de kaydetme yeteneği olan belgeler
 abstract interface class WritableDocument implements ReadableDocument {
-  void saveContent(String newContent);
+  void save(); // Kaydetme garantisi yalnızca burada verilir
 }
 
-class TextDocument implements WritableDocument {
-  String _content;
-  TextDocument(this._content);
+// Word belgesi hem okunabilir hem kaydedilebilir:
+class WordDocument implements WritableDocument {
+  @override
+  void read() => print('Word belgesi okundu.');
 
   @override
-  String readContent() => _content;
-
-  @override
-  void saveContent(String newContent) {
-    _content = newContent;
-    print('Metin belgesi kaydedildi: $_content');
-  }
+  void save() => print('Word belgesi disk üzerine kaydedildi.');
 }
 
-class PdfReportDocument implements ReadableDocument {
-  final String _content;
-  PdfReportDocument(this._content);
-
+// Salt okunur PDF belgesi YALNIZCA okuma sözleşmesini üstlenir:
+class ReadOnlyPdfDocument implements ReadableDocument {
   @override
-  String readContent() => _content;
+  void read() => print('Salt okunur PDF belgesi okundu.');
+  // İçinde sahte veya çöken save() metodu bulundurmaz!
 }
 
-// Fonksiyon artık yalnızca yazılabilir belgeleri kabul ediyor; çökme riski sıfırlandı
-void autoSaveDocuments(List<WritableDocument> writableDocs) {
+// Kaydetme fonksiyonu artık SADECE gerçekten yazılabilen belgeleri kabul eder:
+void saveAllDocuments(List<WritableDocument> writableDocs) {
   for (final doc in writableDocs) {
-    doc.saveContent('Otomatik yedek içeriği');
+    doc.save(); // Artık çökme riski SIFIR! Güvenle çalışır.
   }
 }
 ```
+
+**Neden Doğru Tasarım?**
+* **Derleme Zamanı Güvenliği:** `ReadOnlyPdfDocument` nesnesi `saveAllDocuments` fonksiyonuna parametre olarak verilmek istendiğinde, Dart derleyicisi daha kod çalışmadan hatayı yakalar.
+* **Eksiksiz Yerine Geçebilirlik:** `WritableDocument` beklenen her fonksiyona herhangi bir yazılabilir belge (Word, Excel, Markdown) güvenle verilebilir.
+* **Temiz Mimari:** Metotların içine gizlenmiş sahte hata fırlatmaları tamamen ortadan kalkar.
 
 ---
 
@@ -299,64 +328,72 @@ Tek bir büyük arayüz (`Fat Interface`) tanımlayıp sistemdeki tüm metotlar�
 Bir akıllı ofis uygulamasında cihazları kontrol etmek için tek bir `SmartDevice` arayüzü tanımlandığını düşünelim:
 
 ```dart
-// KÖTÜ TASARIM: Tüm cihaz yetenekleri tek bir arayüze sıkıştırılmış
+// ============================================================================
+// KÖTÜ TASARIM (ISP İhlali): Tek bir dev arayüz (Fat Interface) sınıfları boğuyor!
+// ============================================================================
+
+// Şişkin arayüz: Birbiriyle ilgisiz tüm cihaz yetenekleri tek bir yere yığılmış
 abstract interface class SmartDevice {
-  void turnOn();
-  void turnOff();
-  void printDocument(String text);
-  void scanDocument();
-  void adjustTemperature(double celsius);
+  void turnOn();                    // Cihazı açma yeteneği
+  void turnOff();                   // Cihazı kapatma yeteneği
+  void printDocument(String text);  // Yazıcı çıktısı alma yeteneği
+  void scanDocument();              // Tarayıcıdan belge okuma yeteneği
 }
 
-// Akıllı lamba yalnızca açılıp kapanabilir, ancak yazdırma ve sıcaklık
-// metotlarını da uygulamak zorunda bırakılmıştır.
-class SmartLightBulb implements SmartDevice {
+// Akıllı ampul yalnızca ışığı açıp kapatmak ister,
+// fakat şişkin arayüz yüzünden yazıcı ve tarayıcı metotlarını da ezmek zorunda kalır!
+class SmartBulb implements SmartDevice {
   @override
   void turnOn() => print('Lamba açıldı.');
 
   @override
   void turnOff() => print('Lamba kapatıldı.');
 
+  // İLGİSİZ METOT 1: Lamba çıktı veremez! Mecburen boş bırakılıyor.
   @override
   void printDocument(String text) {
-    // Anlamsız boş uygulama
+    // Boş gövde: Gereksiz kod kalabalığı ve potansiyel hata kaynağı!
   }
 
+  // İLGİSİZ METOT 2: Lamba tarama yapamaz!
   @override
   void scanDocument() {
-    // Anlamsız boş uygulama
-  }
-
-  @override
-  void adjustTemperature(double celsius) {
-    // Anlamsız boş uygulama
+    // Boş gövde: ISP ihlalinin bariz göstergesi (Code Smell)
   }
 }
 ```
 
+**Neden Kötü Tasarım?**
+* **Zoraki Bağımlılık (Unwanted Coupling):** Yarın yazıcı ekibi `printDocument` metoduna yeni bir parametre (ör. kopya sayısı) eklediğinde, lambalarla ilgili tüm sınıflar da etkilenir ve baştan derlenmek zorunda kalır.
+* **Yanıltıcı API:** Ampul nesnesini kullanan bir geliştirici kod tamamlama menüsünde `printDocument()` görünce "Bu lamba çıktı mı alabiliyor?" yanılgısına düşer.
+* **Kod Kirliliği:** Projede içi boş bırakılmış yüzlerce anlamsız metot gövdesi birikir.
+
 ### Doğru Tasarım: Odaklanmış ve Rol Tabanlı Arayüzler
 
-Büyük sözleşme, yetenek bazlı küçük sözleşmelere bölünür. Sınıflar yalnızca sahip oldukları yeteneklerin sözleşmelerini uygular:
+Büyük sözleşme, yetenek bazlı küçük sözleşmelere bölünür. Sınıflar yalnızca kendi doğalarına uygun sözleşmeleri uygular:
 
 ```dart
+// ============================================================================
+// DOĞRU TASARIM (ISP Uygun): İnce, odaklanmış ve amaca özel arayüzler.
+// ============================================================================
+
+// 1. Yetenek: Yalnızca açılıp kapanabilen cihazlar için
 abstract interface class Switchable {
   void turnOn();
   void turnOff();
 }
 
+// 2. Yetenek: Yalnızca yazdırma yeteneği olan cihazlar için
 abstract interface class Printable {
   void printDocument(String text);
 }
 
+// 3. Yetenek: Yalnızca tarama yeteneği olan cihazlar için
 abstract interface class Scannable {
   void scanDocument();
 }
 
-abstract interface class ThermostatControllable {
-  void adjustTemperature(double celsius);
-}
-
-// Akıllı lamba yalnızca açma/kapama sözleşmesini uygular
+// Akıllı ampul SADECE ihtiyacı olan sözleşmeyi seçer:
 class SmartBulb implements Switchable {
   @override
   void turnOn() => print('Lamba açıldı.');
@@ -365,10 +402,10 @@ class SmartBulb implements Switchable {
   void turnOff() => print('Lamba kapatıldı.');
 }
 
-// Çok fonksiyonlu ofis yazıcısı birden fazla odaklanmış sözleşmeyi birleştirebilir
-class OfficeMultiFunctionPrinter implements Switchable, Printable, Scannable {
+// Gelişmiş ofis yazıcısı ise ihtiyacı olan tüm yetenekleri birleştirir:
+class OfficePrinter implements Switchable, Printable, Scannable {
   @override
-  void turnOn() => print('Yazıcı hazır.');
+  void turnOn() => print('Yazıcı açıldı ve hazır.');
 
   @override
   void turnOff() => print('Yazıcı kapatıldı.');
@@ -377,9 +414,14 @@ class OfficeMultiFunctionPrinter implements Switchable, Printable, Scannable {
   void printDocument(String text) => print('Yazdırılıyor: $text');
 
   @override
-  void scanDocument() => print('Belge taranıyor...');
+  void scanDocument() => print('Belge tarandı ve PDF yapıldı.');
 }
 ```
+
+**Neden Doğru Tasarım?**
+* **Modüler Yapı:** Sınıflar ihtiyaç duydukları yetenekleri lego parçaları gibi birleştirebilir (`implements Switchable, Printable`).
+* **Bağımsız Bakım:** Yazıcı arayüzünde yapılacak değişiklikler lambaları asla etkilemez; gereksiz yeniden derleme yaşanmaz.
+* **Tertemiz Kod Tabanı:** İçi boş bırakılmış sahte metotlar tarihe karışır; her metot gerçek bir işleve sahiptir.
 
 ---
 
@@ -397,82 +439,104 @@ Bağımlılığın tersine çevrilmesi ilkesinde iş katmanı kendi ihtiyaç duy
 ### İhlal Örneği: Üst Katmanın Alt Katmana Doğrudan Bağlanması
 
 ```dart
-// Alt seviye teknik detay sınıfı
-class SqliteHabitStorage {
-  void insertHabit(String title) {
-    print('SQLite veritabanına yazıldı: $title');
+// ============================================================================
+// KÖTÜ TASARIM (DIP İhlali): Üst seviye iş mantığı alt seviye araca göbekten bağlı!
+// ============================================================================
+
+// Alt seviye teknik detay sınıfı: SQLite veritabanı aracı
+class SqliteDatabase {
+  void insertUser(String name) {
+    print('Kullanıcı SQLite veritabanına kaydedildi: $name');
   }
 }
 
-// KÖTÜ TASARIM: Üst seviye iş mantığı doğrudan somut SQLite sınıfına göbekten bağlı
-class HabitManager {
-  final SqliteHabitStorage _storage = SqliteHabitStorage();
+// Üst seviye iş mantığı (Business Logic): Sistemin en değerli kurallarını taşır.
+class UserService {
+  // BÜYÜK HATA: Üst katman kendi içinde doğrudan "new" ile somut alt katmanı yaratıyor!
+  final SqliteDatabase _database = SqliteDatabase();
 
-  void createHabit(String title) {
-    if (title.trim().isEmpty) {
-      throw ArgumentError('Alışkanlık başlığı boş olamaz.');
+  void registerUser(String name) {
+    // 1. İş kuralı kontrolü
+    if (name.trim().isEmpty) {
+      throw ArgumentError('Kullanıcı adı boş bırakılamaz!');
     }
-    _storage.insertHabit(title);
+
+    // 2. Alt seviye araca doğrudan bağımlı kayıt çağrısı
+    _database.insertUser(name);
   }
 }
 ```
 
-`HabitManager` sınıfını SQLite olmadan birim testine sokmak veya yarın bulut tabanlı bir API'ye geçirmek imkânsızdır.
+**Neden Kötü Tasarım?**
+* **Altyapıya Mahkumiyet:** Yarın SQLite yerine Firebase veya REST API kullanılmak istendiğinde, çekirdek iş mantığını barındıran `UserService` sınıfı baştan yazılmak zorunda kalır.
+* **Birim Test Çıkmazı:** `UserService` sınıfını test etmek için bilgisayarda mutlaka gerçek bir SQLite dosyasının bulunması gerekir; testler yavaşlar ve dış ortama bağımlı hale gelir.
+* **Ters Yönlü Bağımlılık:** Sistemin kalbi olan iş mantığı, önemsiz bir teknik detay olan veritabanı kütüphanesine esir düşmüştür.
 
 ### Doğru Tasarım: Sözleşme ve Bağımlılık Enjeksiyonu (Dependency Injection)
 
-Üst katman bir sözleşme (`HabitRepository`) tanımlar ve bu sözleşmeyi yapıcı metot (**constructor**) üzerinden dışarıdan alır:
+Üst katman bir sözleşme (`UserRepository`) tanımlar ve bu sözleşmeyi yapıcı metot (**constructor**) üzerinden dışarıdan alır:
 
 ```dart
-// 1. Soyut sözleşme (Üst katmanın belirlediği kural)
-abstract interface class HabitRepository {
-  Future<void> saveHabit(String title);
+// ============================================================================
+// DOĞRU TASARIM (DIP Uygun): Soyut Sözleşme & Bağımlılık Enjeksiyonu (DI)
+// ============================================================================
+
+// 1. Adım: Soyutlama (Sözleşme). Kuralı üst seviye iş mantığı belirler.
+abstract interface class UserRepository {
+  void saveUser(String name); // Verinin nereye kaydedileceğini alt katman bilir
 }
 
-// 2. Üst seviye iş mantığı: Verinin nereye kaydedildiğini bilmez, sözleşmeye güvenir
-class HabitService {
-  final HabitRepository _repository;
+// 2. Adım: Üst seviye iş mantığı. Verinin NASIL saklandığını BİLMEZ ve UMURSAMAZ!
+class UserService {
+  final UserRepository _repository;
 
-  // Bağımlılık dışarıdan enjekte edilir (Constructor Injection)
-  HabitService(this._repository);
+  // Bağımlılık sınıfa dışarıdan verilir (Constructor Injection)
+  UserService(this._repository);
 
-  Future<void> createHabit(String title) async {
-    final normalizedTitle = title.trim();
-    if (normalizedTitle.isEmpty) {
-      throw ArgumentError('Alışkanlık başlığı boş olamaz.');
+  void registerUser(String name) {
+    // İş kuralı kontrolü
+    if (name.trim().isEmpty) {
+      throw ArgumentError('Kullanıcı adı boş bırakılamaz!');
     }
-    await _repository.saveHabit(normalizedTitle);
+
+    // Yalnızca soyut sözleşmeye güvenir ve çağırır
+    _repository.saveUser(name);
   }
 }
 
-// 3. Alt seviye uygulama A: Yerel veritabanı
-class LocalSqliteHabitRepository implements HabitRepository {
+// 3. Adım: Alt seviye somut seçenekler (Teknik detaylar sözleşmeye uyar):
+
+// Seçenek A: Yerel SQLite veritabanı deposu
+class SqliteUserRepository implements UserRepository {
   @override
-  Future<void> saveHabit(String title) async {
-    print('SQLite tablosuna kaydedildi: $title');
+  void saveUser(String name) {
+    print('SQLite veritabanı tablosuna kaydedildi: $name');
   }
 }
 
-// 4. Alt seviye uygulama B: Uzak sunucu API'si
-class RemoteApiHabitRepository implements HabitRepository {
+// Seçenek B: Uzak REST API bulut deposu
+class ApiUserRepository implements UserRepository {
   @override
-  Future<void> saveHabit(String title) async {
-    print('REST API üzerinden sunucuya gönderildi: $title');
+  void saveUser(String name) {
+    print('REST API ile bulut sunucusuna gönderildi: $name');
   }
 }
 
-// 5. Alt seviye uygulama C: Birim testler için bellek içi sahte depo
-class FakeMemoryHabitRepository implements HabitRepository {
-  final List<String> savedHabits = [];
+// Seçenek C: Birim testler için sahte bellek deposu (Mock/Fake)
+class FakeUserRepository implements UserRepository {
+  final List<String> users = [];
 
   @override
-  Future<void> saveHabit(String title) async {
-    savedHabits.add(title);
+  void saveUser(String name) {
+    users.add(name); // Disk veya internet gerekmez; test milisaniyeler içinde biter!
   }
 }
 ```
 
-Bu mimaride `HabitService` sınıfı tek bir satırı bile değiştirilmeden ister yerel SQLite ile, ister uzak sunucuyla, isterse milisaniyeler içinde çalışan birim testiyle (`FakeMemoryHabitRepository`) çalıştırılabilir.
+**Neden Doğru Tasarım?**
+* **Tam Bağımsızlık:** `UserService` sınıfı tek bir satırı bile değiştirilmeden SQLite ile de, REST API ile de, Firebase ile de çalışabilir.
+* **Işık Hızında Birim Testleri:** `FakeUserRepository` sayesinde gerçek veritabanı veya ağ bağlantısına ihtiyaç duymadan milisaniyeler içinde testler koşturulur.
+* **Tersine Çevrilen Kontrol:** Eskiden iş mantığı veritabanı kütüphanesine bağımlıyken, artık veritabanı araçları iş mantığının belirlediği sözleşmeye uymak zorundadır.
 
 ---
 
@@ -480,11 +544,11 @@ Bu mimaride `HabitService` sınıfı tek bir satırı bile değiştirilmeden ist
 
 | İlke | Temel Soru | İhlal Belirtisi (Code Smell) | Çözüm Yaklaşımı |
 | :--- | :--- | :--- | :--- |
-| **SRP** | Bu sınıfı değiştirmek için kaç farklı aktör/neden var? | yüzlerce satırlık `Manager` / `Helper` sınıfları; hem UI hem ağ hem hesaplama yapan dosyalar. | Farklı nedenlerle değişen sorumlulukları odaklanmış ayrı sınıflara bölmek. |
+| **SRP** | Bu sınıfı değiştirmek için kaç farklı aktör/neden var? | Yüzlerce satırlık `Manager` / `Helper` sınıfları; hem UI hem ağ hem hesaplama yapan dosyalar. | Farklı nedenlerle değişen sorumlulukları odaklanmış ayrı sınıflara bölmek. |
 | **OCP** | Yeni bir davranış türü eklerken mevcut çalışan kodu bozuyor muyum? | Tür kontrolü yapan uzun `if/else` veya `switch` blokları. | Ortak bir arayüz tanımlayıp her yeni davranışı ayrı bir sınıf olarak eklemek. |
-| **LSP** | Alt sınıf, üst sınıfın kullanıldığı her yerde sorunsuz çalışıyor mu? | Alt sınıflarda içi boş bırakılan veya `UnsupportedError` fırlatan metotlar. | Kalıtım hiyerarşisini ortak yeteneklere ve doğru sözleşmelere göre yeniden ayırmak. |
-| **ISP** | Bu sınıf gerçekten kullanmadığı metotları uygulamak zorunda mı? | Onlarca metot barındıran tekil dev arayüzler (`AppService`). | Şişkin arayüzleri rol ve yetenek bazlı küçük sözleşmelere ayırmak. |
-| **DIP** | İş mantığım veritabanı veya paket detaylarına doğrudan bağımlı mı? | İş mantığı sınıflarının içinde doğrudan `new HttpClient()` veya `SharedPreferences` çağrılması. | Arayüz üzerinden haberleşmek ve bağımlılıkları `constructor` ile dışarıdan vermek. |
+| **LSP** | Alt sınıf, üst sınıfın yerine geçtiğinde beklenen davranışı koruyor mu? | Alt sınıflarda içi boş bırakılan veya `UnsupportedError` fırlatan metotlar. | Kalıtım hiyerarşisini ortak yeteneklere ve doğru sözleşmelere göre yeniden ayırmak. |
+| **ISP** | Bu sınıf gerçekten kullanmadığı metotları uygulamak zorunda mı? | Onlarca metot barındıran şişkin tekil dev arayüzler (`Fat Interfaces`). | Şişkin arayüzleri rol ve yetenek bazlı küçük sözleşmelere ayırmak. |
+| **DIP** | İş mantığım veritabanı veya paket detaylarına doğrudan bağımlı mı? | İş mantığı sınıflarının içinde doğrudan `new Database()` veya `HttpClient` çağrılması. | Arayüz üzerinden haberleşmek ve bağımlılıkları `constructor` ile dışarıdan vermek. |
 
 ## Aşırı Mühendislik (Over-Engineering) Dengesi
 
