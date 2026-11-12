@@ -1,4 +1,4 @@
-# Kariyer Nedir? Kariyer ve Kariyer ile İlişkili Kavramlar
+# Kariyer ve Kariyer ile İlişkili Kavramlar
 
 Kariyer, bireyin yaşamı boyunca sürdürdüğü mesleki ve kişisel gelişim serüvenidir. Günümüz iş dünyasında kariyer, yalnızca tek bir organizasyonda dikey olarak yükselmek veya bir unvan zincirini takip etmekle sınırlı değildir. Bireyin bilgi, beceri, yetenek, değer ve deneyimlerinin harmanlandığı, sürekli öğrenmeyi ve yatay gelişimi de kapsayan çok boyutlu bir süreçtir.
 
