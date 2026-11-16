@@ -82,93 +82,39 @@ Kural dışı değişen temel değerlendirme sıfatları:
 
 ---
 
-## 3. Sık Kullanılan Teknik Sıfat Çiftleri
+## 3. Gerçek Dünya Karşılaştırma Cümleleri (Sample Comparative Sentences)
 
-Teknik değerlendirme raporlarında zıtlıkları vurgulamak için kullanılan anahtar terimler:
+Teknik alanlarda sıkça karşılaşılan kıyaslama senaryoları ve Türkçe karşılıkları:
 
-| Parametre Çifti | Orijinal Terimler | Türkçe Karşılıkları | Bağlam ve Kullanım Alanı |
-| :--- | :--- | :--- | :--- |
-| **Performans** | `High throughput` $\leftrightarrow$ `Low latency` | Yüksek veri akışı $\leftrightarrow$ Düşük gecikme | Ağ protokolleri ve veri tabanları |
-| **Kaynak** | `Lightweight` $\leftrightarrow$ `Resource-intensive` | Hafif / Düşük kaynaklı $\leftrightarrow$ Ağır / Kaynak tüketen | Kütüphane, mikrodenetleyici ve işletim sistemi |
-| **Maliyet** | `Cost-effective` $\leftrightarrow$ `Expensive` | Fiyat-performans odaklı $\leftrightarrow$ Maliyetli | Bulut altyapısı ve donanım bileşeni seçimi |
-| **Esneklik** | `Flexible` $\leftrightarrow$ `Rigid / Strict` | Esnek / Dinamik $\leftrightarrow$ Katı / Sabit şemalı | NoSQL (şemasız) $\leftrightarrow$ SQL (katı ilişkisel) |
-| **Sağlamlık** | `Robust` $\leftrightarrow$ `Fragile` | Hata toleranslı / Dayanıklı $\leftrightarrow$ Kırılgan / Hassas | Endüstriyel sensörler ve hata yakalama |
+### 3.1. Veri Tabanı ve Veri Yönetimi
 
----
+* `PostgreSQL is more reliable than MongoDB for complex relational transactions.`  
+  *(Karmaşık ilişkisel işlemlerde PostgreSQL, MongoDB'den daha güvenilirdir.)*
 
-## 4. Kıyaslama ve Zıtlık Bildiren Teknik Bağlaçlar
+* `MongoDB offers higher write throughput and better horizontal scalability for unstructured logs.`  
+  *(MongoDB, yapısal olmayan log kayıtlarında daha yüksek yazma hızı ve daha iyi yatay ölçeklenebilirlik sunar.)*
 
-Farklı sistemleri tek bir raporda karşılaştırırken kullanılan temel bağlaçlar:
+* `Redis is significantly faster than relational databases because it operates in-memory.`  
+  *(Redis, bellek içinde çalıştığı için ilişkisel veri tabanlarından belirgin şekilde daha hızlıdır.)*
 
-| Bağlaç | Türkçe Anlamı | Teknik Cümle Örneği | Türkçe Karşılığı |
-| :--- | :--- | :--- | :--- |
-| **Compared to** | ... ile kıyaslandığında | `Compared to HDD, SSD consumes less energy.` | HDD ile kıyaslandığında SSD daha az enerji tüketir. |
-| **Whereas / While** | ... iken / -e karşılık | `SQL enforces schema, whereas NoSQL is dynamic.` | SQL şemayı zorunlu kılarken, NoSQL dinamiktir. |
-| **In contrast to** | ...-in aksine | `In contrast to Wi-Fi, BLE has a lower range.` | Wi-Fi'ın aksine BLE daha düşük bir menzile sahiptir. |
-| **On the other hand** | Diğer yandan / Öte yandan | `Flutter simplifies UI; on the other hand, build size is larger.` | Flutter arayüzü kolaylaştırır; öte yandan çıktı boyutu daha büyüktür. |
+### 3.2. Yazılım ve Mobil Geliştirme
 
----
+* `Cross-platform development with Flutter is more cost-effective and faster than developing separate native apps.`  
+  *(Flutter ile platformlar arası geliştirme yapmak, ayrı yerel uygulamalar geliştirmekten daha uygun maliyetli ve daha hızlıdır.)*
 
-## 5. Gerçek Dünya Vaka Analizleri ve Karşılaştırma Raporları
+* `Native Android code provides direct hardware access and results in smaller binary sizes.`  
+  *(Yerel Android kodu doğrudan donanım erişimi sağlar ve daha küçük derleme boyutları üretir.)*
 
-### Vaka 1: Veri Tabanı Mimarisi (PostgreSQL vs MongoDB)
+* `Compiled languages like Go and Rust are more efficient than interpreted languages like Python.`  
+  *(Go ve Rust gibi derlenen diller, Python gibi yorumlanan dillerden daha verimlidir.)*
 
-```text
-PostgreSQL is more reliable than MongoDB for complex relational transactions. 
-However, MongoDB offers higher write throughput and better horizontal scalability for unstructured logs.
-```
+### 3.3. Donanım ve Ağ Protokolleri
 
-**Türkçe Çeviri:** Karmaşık ilişkisel işlemlerde PostgreSQL, MongoDB'den daha güvenilirdir. Bununla birlikte MongoDB, yapısal olmayan log kayıtlarında daha yüksek yazma hızı ve daha iyi yatay ölçeklenebilirlik sunar.
+* `Wi-Fi delivers higher bandwidth than BLE, making it suitable for continuous data streaming.`  
+  *(Wi-Fi, BLE'den daha yüksek bant genişliği sunarak sürekli veri akışı için uygun hale gelir.)*
 
-| Karşılaştırma Ölçütü | PostgreSQL | MongoDB | Teknik Değerlendirme |
-| :--- | :--- | :--- | :--- |
-| **Transaction Reliability** | `More reliable (ACID)` | `Eventual consistency` | Finansal veri için PostgreSQL seçilmelidir |
-| **Write Throughput** | `Moderate` | `Higher write throughput` | Yüksek hacimli veri akışında MongoDB öne çıkar |
-| **Schema Flexibility** | `Strict relational schema` | `More flexible (JSON/BSON)` | Değişken veri yapıları için NoSQL daha esnektir |
+* `BLE consumes substantially less power than Wi-Fi, allowing battery-powered sensors to operate for years.`  
+  *(BLE, Wi-Fi'dan büyük ölçüde daha az güç tüketerek pilli sensörlerin yıllarca çalışmasına olanak tanır.)*
 
----
-
-### Vaka 2: Mobil Geliştirme Yaklaşımları (Flutter vs Native Android)
-
-```text
-Cross-platform development with Flutter is more cost-effective and faster than developing separate native apps. 
-Nevertheless, native Android code provides direct hardware access and results in smaller binary sizes.
-```
-
-**Türkçe Çeviri:** Flutter ile platformlar arası geliştirme yapmak, ayrı yerel uygulamalar geliştirmekten daha uygun maliyetli ve daha hızlıdır. Yine de yerel Android kodu doğrudan donanım erişimi sağlar ve daha küçük derleme boyutları üretir.
-
-| Karşılaştırma Ölçütü | Flutter (Cross-Platform) | Native (Kotlin / Swift) | Teknik Değerlendirme |
-| :--- | :--- | :--- | :--- |
-| **Development Speed** | `Faster (Single codebase)` | `Slower (Two codebases)` | Pazara hızlı çıkış için Flutter avantajlıdır |
-| **Binary Size** | `Larger (Engine bundle)` | `Smaller binary size` | Kısıtlı depolama alanına sahip cihazlarda yerel kod tercih edilir |
-| **Hardware Access** | `Requires platform channels` | `Direct hardware access` | Derin Bluetooth/NFC sürücülerinde yerel kod daha kararlıdır |
-
----
-
-### Vaka 3: Kablosuz Haberleşme Seçimi (Wi-Fi vs Bluetooth Low Energy - BLE)
-
-```text
-Wi-Fi delivers significantly higher bandwidth than BLE, making it suitable for video streaming. 
-On the other hand, BLE consumes substantially less power, allowing battery-powered sensors to operate for years.
-```
-
-**Türkçe Çeviri:** Wi-Fi, BLE'den belirgin şekilde daha yüksek bant genişliği sunarak video aktarımı için uygun hale gelir. Diğer yandan BLE, büyük ölçüde daha az güç tüketerek pilli sensörlerin yıllarca çalışmasına olanak tanır.
-
-| Parametre | Wi-Fi (802.11) | Bluetooth Low Energy (BLE) | Teknik Karar |
-| :--- | :--- | :--- | :--- |
-| **Data Rate (Throughput)** | `Higher bandwidth (Mbps)` | `Lower bandwidth (kbps)` | Yüksek veri akışında Wi-Fi zorunludur |
-| **Power Consumption** | `High power consumption` | `Substantially less power` | Düğme pille çalışan IoT sensörlerinde BLE kullanılır |
-| **Communication Range** | `Longer range (~50m)` | `Shorter range (~10m)` | Uzak saha izleme için Wi-Fi veya hücresel ağ gerekir |
-
----
-
-## 6. Teknik Karar Matrisi: Teknoloji Seçim Kriterleri
-
-Teknik değerlendirme raporu yazılırken veya iki teknoloji arasında seçim yapılırken şu şablon kullanılır:
-
-| Kriter | Kıyaslama Sorusu | Kullanılacak İngilizce Kalıp | Karar Çıkarımı |
-| :---: | :--- | :--- | :--- |
-| **1** | Hangi teknoloji daha az kaynak tüketiyor? | `X is more lightweight than Y.` | Gömülü ve mobil hedeflerde X seçilir |
-| **2** | Hangisinin tepki süresi daha kısa? | `X provides lower latency than Y.` | Gerçek zamanlı robotik kontrolde X zorunludur |
-| **3** | Hangisi daha düşük maliyetli? | `X is more cost-effective than Y.` | Girişim ve MVP projelerinde X tercih edilir |
-| **4** | Hangisi yüksek yük altında daha dayanıklı? | `X is more robust under heavy traffic.` | Kurumsal ve kritik altyapılarda X seçilir |
+* `SPI is faster than I2C because it uses dedicated clock and data lines for full-duplex communication.`  
+  *(SPI, çift yönlü eşzamanlı iletişim için ayrı saat ve veri hatları kullandığından I2C'den daha hızlıdır.)*
