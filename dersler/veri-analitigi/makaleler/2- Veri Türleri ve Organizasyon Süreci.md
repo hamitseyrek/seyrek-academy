@@ -1,4 +1,4 @@
-# Veri Türleri ve Organizasyon Süreci
+# Veri Türleri ve Organizasyon Süreci: Kaotik Veri Yığınından Yapılandırılmış Karar Mimarisine
 
 Önceki yazı, kurmaca bir teslimat aracına ait iki konum satırı üzerinden ham kaydın tek başına karar üretmediğini gösterdi. Aynı filo düşünüldüğünde soru değişir: Kayıtlar hangi biçimde gelir, nerede birleştirilir, analize girmeden önce hangi adımlardan geçer? Bu yazı yapısal ile yapısal olmayan veriyi ayırır; toplama, temizleme, analiz ve yorumlama hattını tek bir organizasyon çerçevesinde inceler.
 
@@ -114,3 +114,14 @@ Teslimat örneği, üç veri biçimini aynı filoda bir arada gösterir:
 ## Sonraki yazılarda ele alınacak konular
 
 Bu yazı biçimleri ve organizasyon iskeletini kurar. **Verinin kaynaktan nasıl çekildiği** (anket, sensör, web kazıma, API) bir sonraki yazının konusudur. Temizlemenin algoritmik ayrıntıları (anomali, tip dönüşümü) de ilerleyen bölümlerde açılır. Meslek pratiği açısından çıkarım net: analize gitmeden önce verinin türünü bilmek, ortak anahtarlarla eşleştirmek ve dört adımlı hattı bilinçli uygulamak gerekir.
+
+---
+
+## Mühendislik Karar Matrisi
+
+| Veri Biçimi | Şema Esnekliği | Tercih Edilen Depolama | Tipik Sorgulama Aracı | Temel Sahadaki Risk |
+| --- | --- | --- | --- | --- |
+| **Yapısal (Structured)** | Katı şema, önceden tanımlı tipler | PostgreSQL, MySQL, ClickHouse | Standart SQL, RDBMS indeksleri | Şema göçü (migration) kilitlenmeleri |
+| **Yarı Yapılandırılmış** | Yüksek esneklik, dinamik anahtarlar | MongoDB, Elasticsearch, Parquet | JSONPath, Pandas, NoSQL filtreleri | Tip kayması, beklenmeyen null alanlar |
+| **Yapısal Olmayan** | Şemasız, ham dosya ve akış odaklı | AWS S3, MinIO, Azure Blob Storage | Yapay Zekâ / Öznitelik Çıkarım Pipeline | İşlenmeden bekletilip atıl depolama maliyeti üretmesi |
+

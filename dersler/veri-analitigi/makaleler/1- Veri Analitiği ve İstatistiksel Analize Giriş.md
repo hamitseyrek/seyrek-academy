@@ -1,4 +1,4 @@
-# Veri Analitiği ve İstatistiksel Analize Giriş
+# Veri Analitiği ve İstatistiksel Analize Giriş: Ham Kayıttan Algoritmik Karara Ulaşma Sanatı
 
 Yazılım her tıklamayı, sensör her ölçümü, araç her konumu kaydedebilir. Kayıt arttıkça depolama büyür; ancak bu büyüme tek başına daha iyi karar getirmez. Veri analitiği, ham kaydın hangi soruya cevap vereceğini ve bu cevabın hangi eyleme bağlanacağını belirleme işidir. İstatistiksel analiz de aynı hattın devamında, cevabın rastlantıdan ayrılıp ayrılmadığını sınar.
 
@@ -125,3 +125,13 @@ Bir mobil uygulamada veri, oturum ve hata kayıtlarıdır. Betimsel soru, son s�
 Bir mühendislik ölçümünde veri, hattın veya tezgâhın sensöründen gelir. Ortalama sıcaklık normal görünüp kısa süreli sıçramalar malzemeyi bozuyorsa, tek başına ortalama kararı yanıltır. Sapmanın ayırt edilmesi, ölçümün nasıl özetleneceği ve kaydın nasıl hazırlanacağı ile ilgilidir.
 
 Bir otonom veya yarı otonom araçta veri, konum ve hız gibi ölçümlerdir. Karar, kayıt merkeze vardıktan sonra da verilebilir; ölçümün alındığı cihazda da verilebilir. İki durumda da sıra aynıdır: ölçüm önce hıza, hız yol kuralıyla birleşince içgörüye, içgörü de gaz veya uyarı gibi bir eyleme bağlanır. Eylemin sonucu yeni ölçüm üretir ve döngü kapanır.
+
+## Mühendislik Karar Matrisi
+
+| Analitik Seviye | Temel Mühendislik Sorusu | Girdi Verisi | Matematiksel Yöntem | Sahadaki Sistem Çıktısı |
+| --- | --- | --- | --- | --- |
+| **Betimsel** | Ne oldu? | Geçmiş operasyonel telemetri ve log kayıtları | Toplam, aritmetik ortalama, frekans dağılımı | Yönetici paneli, KPI özet tablosu |
+| **Tanısal** | Neden oldu? | Çok değişkenli sensör ve hata kayıtları | Korelasyon matrisi, çapraz kontenjans, ANOVA | Arıza kök neden analizi, segmentasyon raporu |
+| **Tahminsel** | Gelecekte ne olabilir? | Tarihsel zaman serisi ve parametreler | Doğrusal regresyon, sınıflandırma, makine öğrenmesi | Kestirimci bakım uyarısı, kaza olasılık puanı |
+| **Yönlendirici** | Sisteme ne yaptırılmalı? | Tahminler, fiziksel kısıtlar ve operasyonel kurallar | Dinamik kural motorları, matematiksel optimizasyon | Otomatik tork sınırlama, otonom acil frenleme |
+

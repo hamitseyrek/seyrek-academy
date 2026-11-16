@@ -1,4 +1,4 @@
-# Veri Toplama Yöntemleri ve Kaynakları: Sistemlerin Duyu Organları
+# Veri Toplama Yöntemleri ve Kaynakları: Sistemlerin Duyu Organları ve Veri İletim Mimarisi
 
 Geçen hafta, verinin yapısal, yarı yapılandırılmış veya yapısal olmayan biçimlerde tutulabileceğini; farklı kaynaklardan gelen kayıtların ortak kimlik ve zaman bilgileriyle düzenlenebileceğini gördük. Bu hafta bir adım geriye gidip şu soruyu soruyoruz: **Bu kayıtlar sisteme ilk olarak nereden ve nasıl geliyor?**
 
@@ -126,3 +126,14 @@ flowchart LR
 Sensörler fiziksel ölçüm, API'ler sistemler arası veri, web kazıma web sayfasındaki içerik, anketler ve görüşmeler ise insan yanıtlarını sağlayabilir. Bu kaynaklar farklı yöntemlerle toplanır; biçimleri, güncellikleri ve sınırlılıkları da farklıdır. Güvenilir bir sonuç için verinin nereden, ne zaman ve hangi koşullarda geldiğini kaydetmek gerekir.
 
 Bir sonraki yazıda, topladığımız kayıtlardaki eksik, uyumsuz veya hatalı değerleri nasıl fark edip analize hazırlayacağımızı inceleyeceğiz.
+
+---
+
+## Mühendislik Karar Matrisi
+
+| Veri Kaynağı | İletim Protokolü | Örnekleme Frekansı | Başlıca Darboğaz / Risk | Önerilen Mimari Önlem |
+| --- | --- | --- | --- | --- |
+| **Donanım / IoT** | MQTT, CAN-Bus, Protobuf | Yüksek (10 Hz – 100 Hz) | Ağ kopması, sensör kayması (drift) | Cihaz üzerinde yerel flash tampon (Buffer) |
+| **Web API Servisleri** | HTTPS / REST / JSON | Orta (Dakikalık / Saatlik) | Hız limiti (Rate limit 429), ağ gecikmesi | Yerel Redis önbellekleme (Caching) & Retry |
+| **Web Kazıma (Scraping)** | HTTP GET / BeautifulSoup | Düşük (Günlük / Haftalık) | DOM şema değişimi, IP engeli | Otomatik testler & robots.txt uyumu |
+| **İnsan / Form Girdisi** | Mobil Uygulama / Form | Olay Bazlı (Teslimat anı) | Yanıt vermeme, öznel yanlılık (bias) | Tek tıkla mikro anket, zorunlu alan azaltma |
