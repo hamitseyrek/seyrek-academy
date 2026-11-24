@@ -34,11 +34,11 @@ $$\text{Aralık} = \text{En Büyük Değer} - \text{En Küçük Değer}$$
 
 Tek bir uç kaydın tüm resmi bozmasını engellemek için veriler küçükten büyüğe dizilir ve dört eşit parçaya (%25'lik dilimlere) bölünür. Bu dilimleme noktalarına **çeyrekler** denir:
 
-* **$Q_1$ (İlk %25):** Verinin en düşük dörtte birlik sınırıdır.
-* **Medyan ($Q_2$):** Tam ortadaki değerdir (%50).
-* **$Q_3$ (İlk %75):** Verinin en yüksek dörtte birlik dilime girdiği sınırdır.
+* **Q₁ (İlk %25):** Verinin en düşük dörtte birlik sınırıdır.
+* **Medyan (Q₂):** Tam ortadaki değerdir (%50).
+* **Q₃ (İlk %75):** Verinin en yüksek dörtte birlik dilime girdiği sınırdır.
 
-**IQR (Çeyrekler Arası Açıklık)**, $Q_3$ ile $Q_1$ arasındaki farktır:
+**IQR (Çeyrekler Arası Açıklık)**, Q₃ ile Q₁ arasındaki farktır:
 
 $$IQR = Q_3 - Q_1$$
 
@@ -81,7 +81,7 @@ Olasılık her zaman `0` (imkânsız) ile `1` (%100 kesin) arasında bir sayıd�
 
 $$P(\text{Olay}) = \frac{\text{İlgilenilen Durum Sayısı}}{\text{Tüm Olası Durumların Sayısı}}$$
 
-Örneğin bir çağrı merkezine gelen 1.000 çağrının 50'si şikayet içeriyorsa, sisteme düşecek yeni bir aramanın şikayet olma olasılığı $\frac{50}{1000} = 0.05$ (%5) olarak değerlendirilir.
+Örneğin bir çağrı merkezine gelen 1.000 çağrının 50'si şikayet içeriyorsa, sisteme düşecek yeni bir aramanın şikayet olma olasılığı (50 / 1000) = 0.05 (%5) olarak değerlendirilir.
 
 ### Koşullu Olasılık: Yeni Bir Bilgi Geldiğinde İhtimal Nasıl Değişir?
 
@@ -116,9 +116,9 @@ flowchart TD
 ### Pratik Kural (68 – 95 Kuralı):
 Normal dağılan bir süreçte karmaşık formüllere gerek kalmadan iki basit eşik akılda tutulabilir:
 
-1. **Ortalamanın $\pm 1$ standart sapma içi:** Olayların yaklaşık **üçte ikisi (%68)** bu güvenli bantta gerçekleşir.
-2. **Ortalamanın $\pm 2$ standart sapma içi:** Olayların neredeyse **tamamı (%95)** bu aralıktadır.
-3. **$\pm 3$ standart sapmanın ötesi:** Binde üçten daha az rastlanan istisnai durumlardır. Sistem izleme araçlarında doğrudan arıza veya alarm eşiği olarak işaretlenir.
+1. **Ortalamanın ± 1 standart sapma içi:** Olayların yaklaşık **üçte ikisi (%68)** bu güvenli bantta gerçekleşir.
+2. **Ortalamanın ± 2 standart sapma içi:** Olayların neredeyse **tamamı (%95)** bu aralıktadır.
+3. **± 3 standart sapmanın ötesi:** Binde üçten daha az rastlanan istisnai durumlardır. Sistem izleme araçlarında doğrudan arıza veya alarm eşiği olarak işaretlenir.
 
 ### Z-Skoru: Farklı Ölçüleri Aynı Cetvele Koymak
 
@@ -151,13 +151,13 @@ Aşağıdaki tabloda aynı işi yapan iki bağımsız sunucunun son 5 istekteki 
 İki sunucu için temel metrikler hesaplandığında:
 
 * **`server_alpha`:**
-  * Ortalama: $\frac{98+100+102+99+101}{5} = 100\text{ ms}$
-  * Değişim Aralığı: $102 - 98 = 4\text{ ms}$
-  * Standart Sapma: $\approx 1.58\text{ ms}$
+  * Ortalama: (98+100+102+99+101 / 5) = 100 ms
+  * Değişim Aralığı: 102 - 98 = 4 ms
+  * Standart Sapma: ≈ 1.58 ms
 * **`server_beta`:**
-  * Ortalama: $\frac{50+70+100+130+150}{5} = 100\text{ ms}$
-  * Değişim Aralığı: $150 - 50 = 100\text{ ms}$
-  * Standart Sapma: $\approx 41.23\text{ ms}$
+  * Ortalama: (50+70+100+130+150 / 5) = 100 ms
+  * Değişim Aralığı: 150 - 50 = 100 ms
+  * Standart Sapma: ≈ 41.23 ms
 
 Sadece ortalamaya bakılsaydı iki sunucu da `100 ms` olduğu için eşdeğer kabul edilecekti. Oysa dağılım incelendiğinde `server_alpha` saatin tik-takları gibi düzenli çalışırken, `server_beta`'nın geniş dalgalanmalar yaşadığı ve her an kullanıcıyı bekleterek sistem kesintisi yaratabileceği açıkça görülür.
 

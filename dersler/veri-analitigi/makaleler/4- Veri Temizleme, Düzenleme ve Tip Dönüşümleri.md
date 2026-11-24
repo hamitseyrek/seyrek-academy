@@ -122,7 +122,7 @@ $$\text{Alt Eşik} = Q_1 - 1.5 \times IQR$$
 
 $$\text{Üst Eşik} = Q_3 + 1.5 \times IQR$$
 
-Aşırı çarpık gelir, gecikme süresi (latency) veya sensör titreşimi verilerinde Z-skoru ($3\sigma$) yanıltıcıdır; çünkü aşırı bir değer aritmetik ortalamayı ve standart sapmayı da şişirerek sınırları genişletir. IQR ise medyan tabanlı sıralamaya dayandığından uç patlamalara karşı tam dirençlidir.
+Aşırı çarpık gelir, gecikme süresi (latency) veya sensör titreşimi verilerinde Z-skoru (3σ) yanıltıcıdır; çünkü aşırı bir değer aritmetik ortalamayı ve standart sapmayı da şişirerek sınırları genişletir. IQR ise medyan tabanlı sıralamaya dayandığından uç patlamalara karşı tam dirençlidir.
 
 ---
 
@@ -132,9 +132,9 @@ Veri kirliliği türüne göre uygulanacak doğru teşhis, müdahale stratejisi 
 
 | Kirlilik Türü | Tespit Yöntemi | Güvenli Mühendislik Müdahalesi | Kaçınılması Gereken Hata | Sahadaki Risk |
 | :--- | :--- | :--- | :--- | :--- |
-| **MCAR Boşluk** | Boşluk oran matrisi ($< \%3$) | Medyan atama veya satır çıkarma | Tüm seriyi genel ortalamayla doldurmak | Doğal varyansın yapay biçimde daralması |
+| **MCAR Boşluk** | Boşluk oran matrisi (< %3) | Medyan atama veya satır çıkarma | Tüm seriyi genel ortalamayla doldurmak | Doğal varyansın yapay biçimde daralması |
 | **MAR Boşluk** | Çapraz korelasyon / Lojistik regresyon | Alt gruplara göre şartlı doldurma | Grup farklılıklarını yok sayıp tek değer atamak | Alt kümelerdeki örüntülerin silinmesi |
 | **MNAR Boşluk** | Domain uzmanlığı ve eşik analizi | Eksiklik bayrağı (`is_imputed`) üretme | Boş satırları tablodan tamamen silmek | En kritik kriz anlarının kör noktada kalması |
 | **Format Kusuru** | Regex ve tip döküm kontrolleri | ISO 8601 ve UTC zaman standardizasyonu | Yerel saat farklarını dikkate almamak | Zaman serisi analizinde saat kaymaları |
 | **Mükerrer Kayıt** | Mantıksal anahtar (`subset`) kontrolü | En son/ilk geçerli kaydı seçip tekilleştirme | Tüm sütunların birebir aynı olmasını beklemek | Ağ gecikmesi kopyalarının çift sayılması |
-| **Aşırı Anomali** | IQR ($Q_3 + 1.5 \times IQR$) tespiti | Anomali bayraklama ve ayrı modelleme | Aykırı değeri doğrudan silmek | Dolandırıcılık veya cihaz patlama sinyalini kaybetmek |
+| **Aşırı Anomali** | IQR (Q₃ + 1.5 × IQR) tespiti | Anomali bayraklama ve ayrı modelleme | Aykırı değeri doğrudan silmek | Dolandırıcılık veya cihaz patlama sinyalini kaybetmek |

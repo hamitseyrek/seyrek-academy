@@ -58,7 +58,7 @@ Eksik bir hücreyi ortalama veya medyanla doldurmak meşru bir istatistiksel tek
 
 ## 2. İstatistiksel Sınır ve Anomali Tespiti: IQR Formülasyonu
 
-Aşırı çarpık veya patlama riski taşıyan endüstriyel dağılımlarda Z-skoru ($3\sigma$) kuralı geçersizdir. Çünkü tek bir aşırı uç değer aritmetik ortalamayı ve standart sapmayı şişirerek sınırları genişletir ve kendisini gizler. Tukey'nin geliştirdiği Çeyrekler Arası Aralık (IQR) yöntemi, sıralama tabanlı medyanı merkeze aldığı için uç patlamalardan etkilenmeyen dayanıklı (robust) bir metriktir.
+Aşırı çarpık veya patlama riski taşıyan endüstriyel dağılımlarda Z-skoru (3σ) kuralı geçersizdir. Çünkü tek bir aşırı uç değer aritmetik ortalamayı ve standart sapmayı şişirerek sınırları genişletir ve kendisini gizler. Tukey'nin geliştirdiği Çeyrekler Arası Aralık (IQR) yöntemi, sıralama tabanlı medyanı merkeze aldığı için uç patlamalardan etkilenmeyen dayanıklı (robust) bir metriktir.
 
 $$IQR = Q_3 - Q_1$$
 
@@ -182,7 +182,7 @@ print(df_clean[[
 2. **Kritik Hata Dönüşümü:** `temp_c` sütununda yer alan `"HATA"` ve `"yirmi-uc"` metinleri Python'ı kilitlemeden sessizce `NaN` yapılmış, böylece veri hattının sürekliliği sağlanmıştır.
 3. **Fiziksel Sözleşme Denetimi:** 850.0 °C ölçümü, motorun fiziksel sınırını aştığı için sensör kısa devresi kabul edilmiş ve `NaN` değerine dönüştürülmüştür. Bu sayede genel sıcaklık ortalamasının 24 °C yerine 80 °C'ye fırlayarak yanıltıcı yangın alarmı vermesi engellenmiştir.
 4. **Şeffaf İstatistiksel Doldurma:** Boş hücreler serinin sağlam merkezi olan medyan (24.0 °C ve %49.0 nem) ile kapatılmış; aynı zamanda `temp_is_imputed = True` bayrağı ile bu değerlerin sentetik olduğu sisteme tescillenmiştir.
-5. **Kritik Titreşim Anomalisi:** $IQR = 0.30$ ve üst eşik $2.05 \text{ mm/s}$ olarak hesaplanmıştır. 98.5 mm/s ölçümü tablodan silinmemiş; `vibration_anomaly = True` etiketiyle doğrudan bakım mühendisliği altyapısına iletilmiştir.
+5. **Kritik Titreşim Anomalisi:** IQR = 0.30 ve üst eşik 2.05  mm/s olarak hesaplanmıştır. 98.5 mm/s ölçümü tablodan silinmemiş; `vibration_anomaly = True` etiketiyle doğrudan bakım mühendisliği altyapısına iletilmiştir.
 
 ---
 

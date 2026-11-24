@@ -33,21 +33,21 @@ flowchart TD
 
 Bir hipotez testi yürütülürken süreç her zaman iki zıt iddianın matematiksel olarak tanımlanmasıyla başlar.
 
-### 1. Sıfır Hipotezi ($H_0$) ve Alternatif Hipotez ($H_1$)
+### 1. Sıfır Hipotezi (H₀) ve Alternatif Hipotez (H₁)
 
-* **Sıfır Hipotezi ($H_0$):** Varsayılan temel durumdur. Gruplar arasında gerçek bir fark olmadığını, yeni uygulanan yöntemin herhangi bir etki yaratmadığını ve gözlenen küçük farkların tamamen rastlantısal dalgalanmalardan kaynaklandığını savunur.
-* **Alternatif Hipotez ($H_1$):** Araştırmacının veya mühendisin kanıtlamaya çalıştığı iddiadır. Gruplar arasında şansla açıklanamayacak gerçek ve anlamlı bir farkın bulunduğunu öne sürer.
+* **Sıfır Hipotezi (H₀):** Varsayılan temel durumdur. Gruplar arasında gerçek bir fark olmadığını, yeni uygulanan yöntemin herhangi bir etki yaratmadığını ve gözlenen küçük farkların tamamen rastlantısal dalgalanmalardan kaynaklandığını savunur.
+* **Alternatif Hipotez (H₁):** Araştırmacının veya mühendisin kanıtlamaya çalıştığı iddiadır. Gruplar arasında şansla açıklanamayacak gerçek ve anlamlı bir farkın bulunduğunu öne sürer.
 
 $$H_0: \mu_1 = \mu_2 \quad (\text{Gruplar arasında ortalama farkı yoktur})$$
 $$H_1: \mu_1 \neq \mu_2 \quad (\text{Gruplar arasında anlamlı bir fark vardır})$$
 
-* **Kafada Canlandırma:** $H_0$ "ortada yeni bir durum yok, her şey eskisi gibi" der. $H_1$ ise "yeni yöntem fark yarattı, elimizde güçlü veriler var" iddiasındadır.
+* **Kafada Canlandırma:** H₀ "ortada yeni bir durum yok, her şey eskisi gibi" der. H₁ ise "yeni yöntem fark yarattı, elimizde güçlü veriler var" iddiasındadır.
 * **Kullanım Amacı:** Tarafsız bir sıfır noktası belirleyerek analistin kendi önyargılarına kapılmasını engellemek.
-* **Eksik Yanı / Sahadaki Riski:** $H_0$ reddedilemediğinde bu durum $H_0$'ın kesinlikle "doğru" olduğunu kanıtlamaz; yalnızca eldeki verinin farkı ispatlamak için yetersiz olduğunu gösterir.
+* **Eksik Yanı / Sahadaki Riski:** H₀ reddedilemediğinde bu durum H₀'ın kesinlikle "doğru" olduğunu kanıtlamaz; yalnızca eldeki verinin farkı ispatlamak için yetersiz olduğunu gösterir.
 
-### 2. Anlamlılık Düzeyi ($\alpha$) ve p-Değeri
+### 2. Anlamlılık Düzeyi (α) ve p-Değeri
 
-* **Anlamlılık Düzeyi ($\alpha$):** Gerçekte bir fark yokken yanlışlıkla "fark var" deme riskine verilen toleranstır. Endüstri standardı olarak genellikle `%5` ($\alpha = 0.05$) veya kritik güvenlik süreçlerinde `%1` ($\alpha = 0.01$) seçilir.
+* **Anlamlılık Düzeyi (α):** Gerçekte bir fark yokken yanlışlıkla "fark var" deme riskine verilen toleranstır. Endüstri standardı olarak genellikle `%5` (α = 0.05) veya kritik güvenlik süreçlerinde `%1` (α = 0.01) seçilir.
 * **p-Değeri (Probability Value):** Eğer sıfır hipotezi gerçekten doğruysa, elimizdeki veya bundan daha uç bir veri tablosuyla karşılaşma olasılığıdır.
 
 $$\text{Karar Kuralı:} \quad \begin{cases} p \le \alpha & \longrightarrow H_0 \text{ Reddedilir (Fark anlamlıdır)} \\ p > \alpha & \longrightarrow H_0 \text{ Reddedilemez (Yetersiz kanıt)} \end{cases}$$
@@ -58,29 +58,29 @@ p-Değeri Skalası (Alfa = 0.05 Sınırı):
 <--- H0 Red (Anlamlı Fark) ---> | <--- H0 Reddedilemez (Belirsiz / Şans) --->
 ```
 
-* **Kafada Canlandırma:** Bir madeni para 10 kez havaya atılıp 10 kez tura gelirse, paranın hilesiz olduğunu söyleyen sıfır hipotezinin doğru olma olasılığı $p = 0.00098$'dir. Bu olasılık eşik değer olan $0.05$'ten çok küçük olduğu için "Bu para hilesizdir" iddiası reddedilir.
+* **Kafada Canlandırma:** Bir madeni para 10 kez havaya atılıp 10 kez tura gelirse, paranın hilesiz olduğunu söyleyen sıfır hipotezinin doğru olma olasılığı p = 0.00098'dir. Bu olasılık eşik değer olan 0.05'ten çok küçük olduğu için "Bu para hilesizdir" iddiası reddedilir.
 * **Kullanım Amacı:** Karar alma sürecini sübjektif yorumlardan kurtarıp nesnel bir olasılık eşiğine bağlamak.
-* **Eksik Yanı / Sahadaki Riski:** p-değeri etkinin büyüklüğünü söylemez; yalnızca etkinin şans eseri ortaya çıkıp çıkmadığını test eder. Örneklem boyutu on binlerce satıra ulaştığında çok önemsiz minik farklar bile $p < 0.05$ çıkabilir.
+* **Eksik Yanı / Sahadaki Riski:** p-değeri etkinin büyüklüğünü söylemez; yalnızca etkinin şans eseri ortaya çıkıp çıkmadığını test eder. Örneklem boyutu on binlerce satıra ulaştığında çok önemsiz minik farklar bile p < 0.05 çıkabilir.
 
 ### 3. İstatistiksel Karar Hataları: Tip I ve Tip II Hata
 
 İstatistiksel kararlar olasılıklara dayandığı için her zaman hata payı barındırır:
 
-| Gerçek Durum \ Alınan Karar | $H_0$ Reddedilemez (Fark Yok Dendi) | $H_0$ Reddedildi (Fark Var Dendi) |
+| Gerçek Durum \ Alınan Karar | H₀ Reddedilemez (Fark Yok Dendi) | H₀ Reddedildi (Fark Var Dendi) |
 | :--- | :--- | :--- |
-| **$H_0$ Gerçekte Doğru (Fark Yok)** | Doğru Karar (Güvenilirlik: $1 - \alpha$) | **Tip I Hata ($\alpha$)** — *Yalancı Pozitif* |
-| **$H_0$ Gerçekte Yanlış (Fark Var)** | **Tip II Hata ($\beta$)** — *Yalancı Negatif* | Doğru Karar (Testin Gücü: $1 - \beta$) |
+| **H₀ Gerçekte Doğru (Fark Yok)** | Doğru Karar (Güvenilirlik: 1 - α) | **Tip I Hata (α)** — *Yalancı Pozitif* |
+| **H₀ Gerçekte Yanlış (Fark Var)** | **Tip II Hata (β)** — *Yalancı Negatif* | Doğru Karar (Testin Gücü: 1 - β) |
 
 * **Tip I Hata (Yalancı Pozitif):** Sistemde hiçbir iyileşme yokken yeni yazılım sürümünün daha hızlı olduğunu ilan etmektir. Mahkemede masum bir insanın hapse atılmasıdır.
 * **Tip II Hata (Yalancı Negatif):** Yeni geliştirilen bir algoritma gerçekten daha başarılıyken, veri yetersizliği yüzünden bu başarının fark edilemeyip projenin çöpe atılmasıdır. Mahkemede suçlu birinin serbest kalmasıdır.
 
 ---
 
-## İki Ortalama Karşılaştırması: $t$-Testi
+## İki Ortalama Karşılaştırması: t-Testi
 
-Sürekli bir değişkenin (süre, harcama tutarı, sunucu yanıt gecikmesi) iki farklı grup arasındaki ortalamalarını kıyaslamak için **Student's $t$-testi** kullanılır.
+Sürekli bir değişkenin (süre, harcama tutarı, sunucu yanıt gecikmesi) iki farklı grup arasındaki ortalamalarını kıyaslamak için **Student's t-testi** kullanılır.
 
-### 1. Bağımsız İki Örneklem $t$-Testi (Independent Samples $t$-test)
+### 1. Bağımsız İki Örneklem t-Testi (Independent Samples t-test)
 
 Birbirinden bağımsız iki grubun ortalamalarını kıyaslar. Örneğin: A şubesi kuryeleri ile B şubesi kuryelerinin teslimat süreleri.
 
@@ -96,13 +96,13 @@ Grup B (Yeni Tasarım): Ort = 3.6 sn, Sapma = 0.7 sn
 Fark: 0.6 sn. Bu fark t-testi ile test edilir -> t = 3.12, p = 0.002 (p < 0.05, Fark Anlamlı)
 ```
 
-### 2. Bağımlı (Eşleştirilmiş) Örneklem $t$-Testi (Paired Samples $t$-test)
+### 2. Bağımlı (Eşleştirilmiş) Örneklem t-Testi (Paired Samples t-test)
 
 Aynı deneklerin iki farklı andaki ölçümlerini (önce vs. sonra) karşılaştırır.
 
 $$t = \frac{\bar{D}}{\frac{s_D}{\sqrt{n}}}$$
 
-Burada $\bar{D}$, her bir birey için "Sonra - Önce" farklarının ortalamasıdır.
+Burada D̄, her bir birey için "Sonra - Önce" farklarının ortalamasıdır.
 
 * **Kafada Canlandırma:** Aynı personelin analitik eğitiminden önceki performans puanları ile eğitimden sonraki puanlarını eşleştirerek incelemek.
 * **Kullanım Amacı:** Dış faktörlerin etkisini sıfırlayarak yalnızca uygulanan müdahalenin (eğitim, optimizasyon yaması, diyet) etkisini ölçmek.
@@ -110,11 +110,11 @@ Burada $\bar{D}$, her bir birey için "Sonra - Önce" farklarının ortalamasıd
 
 ---
 
-## Kategorik Değişkenler Arasındaki İlişki: Ki-Kare ($\chi^2$) Testi
+## Kategorik Değişkenler Arasındaki İlişki: Ki-Kare (χ²) Testi
 
-Sayısal ortalamalar yerine kategorik frekanslar incelendiğinde (örneğin kullanıcı cihaz türü ile satın alma durumu arasındaki ilişki) $t$-testi uygulanamaz. Bunun yerine **Ki-Kare Bağımsızlık Testi** kullanılır.
+Sayısal ortalamalar yerine kategorik frekanslar incelendiğinde (örneğin kullanıcı cihaz türü ile satın alma durumu arasındaki ilişki) t-testi uygulanamaz. Bunun yerine **Ki-Kare Bağımsızlık Testi** kullanılır.
 
-Ki-Kare testi, sahada gerçekte sayılan **gözlenen değerler ($O$)** ile iki değişken arasında hiçbir bağ olmasaydı ortaya çıkması beklenen teorik **beklenen değerler ($E$)** arasındaki makası ölçer:
+Ki-Kare testi, sahada gerçekte sayılan **gözlenen değerler (O)** ile iki değişken arasında hiçbir bağ olmasaydı ortaya çıkması beklenen teorik **beklenen değerler (E)** arasındaki makası ölçer:
 
 $$\chi^2 = \sum \frac{(O - E)^2}{E}$$
 
@@ -130,7 +130,7 @@ flowchart LR
 ```
 *Şekil 2: Ki-kare testinde gözlenen ve beklenen frekansların kıyaslama mantığı.*
 
-* **Kafada Canlandırma:** Bir zarın 60 atışta her yüzünün 10'ar defa gelmesi beklenir ($E=10$). Eğer zar 30 kez 6 gelmişse ($O=30$), aradaki büyük sapma zarın hileli olduğunu gösterir.
+* **Kafada Canlandırma:** Bir zarın 60 atışta her yüzünün 10'ar defa gelmesi beklenir (E=10). Eğer zar 30 kez 6 gelmişse (O=30), aradaki büyük sapma zarın hileli olduğunu gösterir.
 * **Kullanım Amacı:** Çapraz tablolarda iki kategorik özelliğin birbirinden bağımsız mı olduğunu, yoksa birbirine bağımlı mı hareket ettiğini tespit etmek.
 * **Eksik Yanı / Sahadaki Riski:** Hücrelerdeki beklenen değerlerin en az 5 olması gerekir. Çok küçük örneklemlerde Ki-Kare yerine Fisher Kesin Testi (Fisher's Exact Test) tercih edilmelidir.
 
@@ -138,15 +138,15 @@ flowchart LR
 
 ## İstatistiksel Anlamlılık ve Etki Büyüklüğü (Effect Size)
 
-Bir analizde $p < 0.05$ bulunması her zaman operasyonel olarak büyük bir başarı kazanıldığı anlamına gelmez. Milyonlarca satırlık büyük veri setlerinde milisaniyelik bir hız farkı bile istatistiksel olarak anlamlı ($p < 0.001$) çıkabilir.
+Bir analizde p < 0.05 bulunması her zaman operasyonel olarak büyük bir başarı kazanıldığı anlamına gelmez. Milyonlarca satırlık büyük veri setlerinde milisaniyelik bir hız farkı bile istatistiksel olarak anlamlı (p < 0.001) çıkabilir.
 
-Bu sebeple kararın büyüklüğünü ölçmek için **Etki Büyüklüğü** (örneğin iki ortalama arasındaki standartlaştırılmış fark olan **Cohen's $d$**) raporlanmalıdır:
+Bu sebeple kararın büyüklüğünü ölçmek için **Etki Büyüklüğü** (örneğin iki ortalama arasındaki standartlaştırılmış fark olan **Cohen's d**) raporlanmalıdır:
 
 $$d = \frac{\bar{X}_1 - \bar{X}_2}{s_{\text{havuz}}}$$
 
-* **Küçük Etki ($d \approx 0.2$):** İstatistiksel olarak fark vardır fakat günlük hayatta insan gözüyle fark edilmesi zordur.
-* **Orta Etki ($d \approx 0.5$):** Sahada net olarak hissedilen operasyonel iyileşme.
-* **Büyük Etki ($d \ge 0.8$):** Sistemi kökten değiştiren belirgin fark.
+* **Küçük Etki (d ≈ 0.2):** İstatistiksel olarak fark vardır fakat günlük hayatta insan gözüyle fark edilmesi zordur.
+* **Orta Etki (d ≈ 0.5):** Sahada net olarak hissedilen operasyonel iyileşme.
+* **Büyük Etki (d ≥ 0.8):** Sistemi kökten değiştiren belirgin fark.
 
 ---
 
@@ -154,8 +154,8 @@ $$d = \frac{\bar{X}_1 - \bar{X}_2}{s_{\text{havuz}}}$$
 
 | Hipotez Testi | İncelenen Değişken Türü | Karşılaştırma Amacı | Temel Karar Kriteri | Sahadaki Tipik Kullanım Alanı |
 | :--- | :--- | :--- | :--- | :--- |
-| **Bağımsız $t$-Testi** | Sürekli veri + 2 bağımsız grup | İki farklı kitlenin ortalaması eşit mi? | $p \le 0.05 \rightarrow$ Ortalamalar farklıdır | A/B Testi performans kıyaslaması, iki makine parçasının dayanıklılık testi |
-| **Bağımlı $t$-Testi** | Sürekli veri + Eşleştirilmiş gruplar | Aynı grubun öncesi ve sonrası farklı mı? | $p \le 0.05 \rightarrow$ Müdahale etki etmiştir | Sunucu güncellemesi öncesi ve sonrası yanıt süreleri, eğitim etkisi |
-| **Ki-Kare Bağımsızlık** | 2 Kategorik değişken (Frekanslar) | İki nitelik arasında bağımlılık var mı? | $p \le 0.05 \rightarrow$ Nitelikler ilişkilidir | Müşteri segmenti ile kampanya tercihi, cihaz türü ile hata alma ilişkisi |
-| **Ki-Kare Uyum İyiliği** | Tek Kategorik değişken (Frekans) | Gözlenen dağılım teorik dağılıma uyuyor mu? | $p \le 0.05 \rightarrow$ Dağılım beklentiden sapmıştır | Sahte işlem / dolandırıcılık tespiti, donanım arıza frekansı doğrulaması |
-| **Mann-Whitney U** | Sürekli / Sıralı (Non-parametrik) | Normal dağılmayan iki grup farklı mı? | $p \le 0.05 \rightarrow$ Sıra medyanları farklıdır | Aşırı uç değer içeren bekleme süreleri, kullanıcı memnuniyet anketleri (Likert) |
+| **Bağımsız t-Testi** | Sürekli veri + 2 bağımsız grup | İki farklı kitlenin ortalaması eşit mi? | p ≤ 0.05 → Ortalamalar farklıdır | A/B Testi performans kıyaslaması, iki makine parçasının dayanıklılık testi |
+| **Bağımlı t-Testi** | Sürekli veri + Eşleştirilmiş gruplar | Aynı grubun öncesi ve sonrası farklı mı? | p ≤ 0.05 → Müdahale etki etmiştir | Sunucu güncellemesi öncesi ve sonrası yanıt süreleri, eğitim etkisi |
+| **Ki-Kare Bağımsızlık** | 2 Kategorik değişken (Frekanslar) | İki nitelik arasında bağımlılık var mı? | p ≤ 0.05 → Nitelikler ilişkilidir | Müşteri segmenti ile kampanya tercihi, cihaz türü ile hata alma ilişkisi |
+| **Ki-Kare Uyum İyiliği** | Tek Kategorik değişken (Frekans) | Gözlenen dağılım teorik dağılıma uyuyor mu? | p ≤ 0.05 → Dağılım beklentiden sapmıştır | Sahte işlem / dolandırıcılık tespiti, donanım arıza frekansı doğrulaması |
+| **Mann-Whitney U** | Sürekli / Sıralı (Non-parametrik) | Normal dağılmayan iki grup farklı mı? | p ≤ 0.05 → Sıra medyanları farklıdır | Aşırı uç değer içeren bekleme süreleri, kullanıcı memnuniyet anketleri (Likert) |
